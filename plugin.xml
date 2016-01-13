@@ -5,11 +5,11 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Sample Category"
+            name="LongMenthodDetector"
             id="com.cleverton.longmethoddetector">
       </category>
       <view
-            name="Sample View"
+            name="View Métodos Longos"
             icon="icons/sample.gif"
             category="com.cleverton.longmethoddetector"
             class="com.cleverton.longmethoddetector.views.MetodoLongoView"
