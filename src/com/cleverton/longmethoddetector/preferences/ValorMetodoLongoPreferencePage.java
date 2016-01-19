@@ -1,6 +1,7 @@
 package com.cleverton.longmethoddetector.preferences;
 
 import org.eclipse.jface.preference.*;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import com.cleverton.longmethoddetector.Activator;
@@ -19,16 +20,21 @@ import com.cleverton.longmethoddetector.Activator;
  * be accessed directly via the preference store.
  */
 
-public class ValorMetodoLongoPreferencePage
-	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage {
+public class ValorMetodoLongoPreferencePage extends FieldEditorPreferencePage 
+implements IWorkbenchPreferencePage {
+
+	private DirectoryFieldEditor projetoExemploDirectory;
+	private RadioGroupFieldEditor escolhaRadioGroup;
+	private IntegerFieldEditor valorLimiarField;
+	
+	private String[][] opcoesRadioGroup = {{ "Usar projeto como exemplo", "projetoExemplo" }, 
+		{"valor Limiar", "valorLimiar" }};
 
 	public ValorMetodoLongoPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("A demonstration of a preference page implementation");
 	}
-	
+
 	/**
 	 * Creates the field editors. Field editors are abstractions of
 	 * the common GUI blocks needed to manipulate various types
@@ -36,30 +42,58 @@ public class ValorMetodoLongoPreferencePage
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
-		addField(new DirectoryFieldEditor(PreferenceConstants.P_PATH, 
-				"&Directory preference:", getFieldEditorParent()));
-		addField(
-			new BooleanFieldEditor(
-				PreferenceConstants.P_BOOLEAN,
-				"&An example of a boolean preference",
-				getFieldEditorParent()));
+		escolhaRadioGroup = new RadioGroupFieldEditor(PreferenceConstants.P_CHOICE,
+				"Escolha o tipo de valor a ser utilizado: ", 1, opcoesRadioGroup
+				, getFieldEditorParent(), true);
+		
+		projetoExemploDirectory = new DirectoryFieldEditor(PreferenceConstants.P_PATH, 
+				"Diretório do projeto: ", getFieldEditorParent());
 
-		addField(new RadioGroupFieldEditor(
-				PreferenceConstants.P_CHOICE,
-			"An example of a multiple-choice preference",
-			1,
-			new String[][] { { "&Choice 1", "choice1" }, {
-				"C&hoice 2", "choice2" }
-		}, getFieldEditorParent()));
-		addField(
-			new StringFieldEditor(PreferenceConstants.P_STRING, "A &text preference:", getFieldEditorParent()));
+		valorLimiarField = new IntegerFieldEditor(PreferenceConstants.P_INTEGER, "Valor limiar:", 
+				getFieldEditorParent());
+		
+		addField(escolhaRadioGroup);
+		addField(projetoExemploDirectory);
+		addField(valorLimiarField);
+		
+		changeFieldsPorPreferences();
 	}
 
+	public void changeFieldsPorPreferences() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		if (store.getString(PreferenceConstants.P_CHOICE).equals(opcoesRadioGroup[0][1])) {
+			projetoExemploDirectory.setEnabled(true, getFieldEditorParent());
+			valorLimiarField.setEnabled(false, getFieldEditorParent());
+		} else {
+			projetoExemploDirectory.setEnabled(false, getFieldEditorParent());
+			valorLimiarField.setEnabled(true, getFieldEditorParent());
+		}
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		super.propertyChange(event);
+		if (event.getSource() == escolhaRadioGroup) {
+			if (event.getNewValue().toString().equals(opcoesRadioGroup[0][1])) {
+				projetoExemploDirectory.setEnabled(true, getFieldEditorParent());
+				valorLimiarField.setEnabled(false, getFieldEditorParent());
+			} else {
+				projetoExemploDirectory.setEnabled(false, getFieldEditorParent());
+				valorLimiarField.setEnabled(true, getFieldEditorParent());
+			}
+		}
+	}
+
+	@Override
+	protected void performDefaults() {
+		super.performDefaults();
+		changeFieldsPorPreferences();
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
-		new ValorMetodoLongoPreferencePage();
 	}
-	
+
 }
