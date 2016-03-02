@@ -13,8 +13,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
-import com.cleverton.longmethoddetector.model.ProblemaModel;
-import com.cleverton.longmethoddetector.model.ProblemaProviderModel;
+import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
+import com.cleverton.longmethoddetector.model.MetodoLongoProviderModel;
 
 public class MetodoLongoView extends ViewPart {
 	/**
@@ -23,12 +23,12 @@ public class MetodoLongoView extends ViewPart {
 	public static final String ID = "com.cleverton.longmethoddetector.views.MetodoLongoView";
 
 	private TableViewer viewer;
-	private ProblemaMetodoLongoComparator comparator;
+	private MetodoLongoComparator comparator;
 
 	public void createPartControl(Composite parent) {
 		createViewer(parent);
 		// set the sorter for the table
-		comparator = new ProblemaMetodoLongoComparator();
+		comparator = new MetodoLongoComparator();
 		viewer.setComparator(comparator);
 	}
 
@@ -78,7 +78,7 @@ public class MetodoLongoView extends ViewPart {
 		viewer.setContentProvider(new ArrayContentProvider());
 		// get the content for the viewer, setInput will call getElements in the
 		// contentProvider
-		viewer.setInput(ProblemaProviderModel.INSTANCE.getProblemas());
+		viewer.setInput(MetodoLongoProviderModel.INSTANCE.getMetodosLongos());
 		// make the selection available to other views
 		getSite().setSelectionProvider(viewer);
 		// define layout for the viewer
@@ -101,15 +101,15 @@ public class MetodoLongoView extends ViewPart {
 
 	// create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Pacote", "Classe", "Método", "Linha" };
+		String[] titles = { "Diretório", "Método", "Linha Inicial", "Nº de Linhas" };
 		int[] bounds = { 400, 200, 200, 50 };
 
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				ProblemaModel p = (ProblemaModel) element;
-				return p.getPastaDeOrigem();
+				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				return p.getDiretorioDaClasse();
 			}
 		});
 
@@ -117,8 +117,8 @@ public class MetodoLongoView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				ProblemaModel p = (ProblemaModel) element;
-				return p.getNomeClasse();
+				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				return p.getNomeMetodo();
 			}
 		});
 
@@ -126,8 +126,8 @@ public class MetodoLongoView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				ProblemaModel p = (ProblemaModel) element;
-				return p.getNomeMetodo();
+				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				return p.getLinhaInicial()+"";
 			}
 		});
 
@@ -135,8 +135,8 @@ public class MetodoLongoView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				ProblemaModel p = (ProblemaModel) element;
-				return p.getNumeroDaLinhaInicial()+"";
+				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				return p.getNumeroLinhas()+"";
 			}
 		});
 	}

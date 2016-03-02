@@ -27,8 +27,11 @@ implements IWorkbenchPreferencePage {
 	private RadioGroupFieldEditor escolhaRadioGroup;
 	private IntegerFieldEditor valorLimiarField;
 	
-	private String[][] opcoesRadioGroup = {{ "Usar projeto como exemplo", "projetoExemplo" }, 
-		{"valor Limiar", "valorLimiar" }};
+	public static final String OPCAOPROJETOEXEMPLO = "projetoExemplo";
+	public static final String OPCAOVALORLIMIAR = "valorLimiar";
+	
+	private String[][] opcoesRadioGroup = {{ "Usar projeto como exemplo", OPCAOPROJETOEXEMPLO }, 
+		{"valor Limiar", OPCAOVALORLIMIAR }};
 
 	public ValorMetodoLongoPreferencePage() {
 		super(GRID);
@@ -42,14 +45,14 @@ implements IWorkbenchPreferencePage {
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
-		escolhaRadioGroup = new RadioGroupFieldEditor(PreferenceConstants.P_CHOICE,
+		escolhaRadioGroup = new RadioGroupFieldEditor(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR,
 				"Escolha o tipo de valor a ser utilizado: ", 1, opcoesRadioGroup
 				, getFieldEditorParent(), true);
 		
-		projetoExemploDirectory = new DirectoryFieldEditor(PreferenceConstants.P_PATH, 
+		projetoExemploDirectory = new DirectoryFieldEditor(PreferenceConstants.PROJETO_EXEMPLO, 
 				"Diretório do projeto: ", getFieldEditorParent());
 
-		valorLimiarField = new IntegerFieldEditor(PreferenceConstants.P_INTEGER, "Valor limiar:", 
+		valorLimiarField = new IntegerFieldEditor(PreferenceConstants.VALOR_LIMIAR, "Valor limiar:", 
 				getFieldEditorParent());
 		
 		addField(escolhaRadioGroup);
@@ -61,7 +64,7 @@ implements IWorkbenchPreferencePage {
 
 	public void changeFieldsPorPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		if (store.getString(PreferenceConstants.P_CHOICE).equals(opcoesRadioGroup[0][1])) {
+		if (store.getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(OPCAOPROJETOEXEMPLO)) {
 			projetoExemploDirectory.setEnabled(true, getFieldEditorParent());
 			valorLimiarField.setEnabled(false, getFieldEditorParent());
 		} else {
@@ -74,7 +77,7 @@ implements IWorkbenchPreferencePage {
 	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
 		if (event.getSource() == escolhaRadioGroup) {
-			if (event.getNewValue().toString().equals(opcoesRadioGroup[0][1])) {
+			if (event.getNewValue().toString().equals(OPCAOPROJETOEXEMPLO)) {
 				projetoExemploDirectory.setEnabled(true, getFieldEditorParent());
 				valorLimiarField.setEnabled(false, getFieldEditorParent());
 			} else {

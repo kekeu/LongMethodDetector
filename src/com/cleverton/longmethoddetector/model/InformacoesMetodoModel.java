@@ -1,18 +1,21 @@
 package com.cleverton.longmethoddetector.model;
 
-public class InformacoesMetodo {
+public class InformacoesMetodoModel {
 	
 	private int linhaInicial;
 	private int numeroLinhas;
 	private String diretorioDaClasse;
+	private String nomeMetodo;
 	
-	public InformacoesMetodo() {
+	public InformacoesMetodoModel() {
 	}
 	
-	public InformacoesMetodo(int linhaInicial, int numeroLinhas, String diretorioDaClasse) {
+	public InformacoesMetodoModel(int linhaInicial, int numeroLinhas, String diretorioDaClasse, 
+			String nomeMetodo) {
 		this.linhaInicial = linhaInicial;
 		this.numeroLinhas = numeroLinhas;
 		this.diretorioDaClasse = diretorioDaClasse;
+		this.nomeMetodo = nomeMetodo;
 	}
 
 	public int getLinhaInicial() {
@@ -37,5 +40,13 @@ public class InformacoesMetodo {
 
 	public void setDiretorioDaClasse(String diretorioDaClasse) {
 		this.diretorioDaClasse = diretorioDaClasse;
+	}
+
+	public String getNomeMetodo() {
+		return nomeMetodo;
+	}
+
+	public void setNomeMetodo(String nomeMetodo) {
+		this.nomeMetodo = nomeMetodo;
 	}
 }

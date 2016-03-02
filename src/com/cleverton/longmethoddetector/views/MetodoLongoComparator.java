@@ -4,14 +4,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
-import com.cleverton.longmethoddetector.model.ProblemaModel;
+import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
 
-public class ProblemaMetodoLongoComparator extends ViewerComparator {
+public class MetodoLongoComparator extends ViewerComparator {
 	  private int propertyIndex;
 	  private static final int DESCENDING = 1;
 	  private int direction = DESCENDING;
 
-	  public ProblemaMetodoLongoComparator() {
+	  public MetodoLongoComparator() {
 	    this.propertyIndex = 0;
 	    direction = DESCENDING;
 	  }
@@ -33,21 +33,24 @@ public class ProblemaMetodoLongoComparator extends ViewerComparator {
 
 	  @Override
 	  public int compare(Viewer viewer, Object e1, Object e2) {
-	    ProblemaModel p1 = (ProblemaModel) e1;
-	    ProblemaModel p2 = (ProblemaModel) e2;
+	    InformacoesMetodoModel p1 = (InformacoesMetodoModel) e1;
+	    InformacoesMetodoModel p2 = (InformacoesMetodoModel) e2;
 	    int rc = 0;
 	    switch (propertyIndex) {
 	    case 0:
-	      rc = p1.getPastaDeOrigem().compareTo(p2.getPastaDeOrigem());
+	      rc = p1.getDiretorioDaClasse().compareTo(p2.getDiretorioDaClasse());
 	      break;
 	    case 1:
-	      rc = p1.getNomeClasse().compareTo(p2.getNomeClasse());
-	      break;
-	    case 2:
 	      rc = p1.getNomeMetodo().compareTo(p2.getNomeMetodo());
 	      break;
+	    case 2:
+	    	if (p1.getLinhaInicial() >= p2.getLinhaInicial()) {
+		        rc = 1;
+		      } else
+		        rc = -1;
+	      break;
 	    case 3:
-	      if (p1.getNumeroDaLinhaInicial() >= p2.getNumeroDaLinhaInicial()) {
+	      if (p1.getNumeroLinhas() >= p2.getNumeroLinhas()) {
 	        rc = 1;
 	      } else
 	        rc = -1;
