@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cleverton.longmethoddetector.negocio.AnalisadorInformacoesMetodos;
+import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivos;
 
 public enum MetodoLongoProviderModel {
 	INSTANCE;
@@ -13,10 +14,10 @@ public enum MetodoLongoProviderModel {
 
 	private MetodoLongoProviderModel() {
 		listaMetodosLongos = new ArrayList<InformacoesMetodoModel>();
-		ArrayList<String> projetos = new ArrayList<>();
-		projetos.add("C:\\runtime-EclipseApplication\\Projeto_P2");
-		projetos.add("C:\\runtime-EclipseApplication\\TESTJDT");
-		
+		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
+		for (String string : projetos) {
+			System.out.println(string);
+		}
 		AnalisadorInformacoesMetodos analisador = new AnalisadorInformacoesMetodos();
 		ArrayList<InformacoesMetodoModel> informacoesMetodos;
 		try {

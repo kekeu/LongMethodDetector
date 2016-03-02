@@ -83,4 +83,28 @@
             class="com.cleverton.longmethoddetector.handlers.MenuMetodoLongoHandler">
       </handler>
    </extension>
+   
+   <!-- Popup menu to add a menu to right click of a java file in the package explorer--> 	
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution id="Clarity.objectContribution2"
+	 		objectClass="org.eclipse.jdt.core.IOpenable">
+         	<action
+               label="Analisar Projeto"
+               class="com.cleverton.longmethoddetector.popup.AdicionarAnaliseProjeto"
+               menubarPath="additions"
+               id="com.cleverton.longmethoddetector.popupMenu.adicionarProjeto">
+         	</action>
+		</objectContribution>
+	</extension>
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution id="Clarity.objectContribution2"
+	 		objectClass="org.eclipse.jdt.core.IOpenable">
+         	<action
+               label="Remover Projeto"
+               class="com.cleverton.longmethoddetector.popup.RemoverAnaliseProjeto"
+               menubarPath="additions"
+               id="com.cleverton.longmethoddetector.popupMenu.removerProjeto">
+         	</action>
+		</objectContribution>
+	</extension>
 </plugin>
