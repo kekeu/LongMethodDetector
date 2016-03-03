@@ -7,30 +7,22 @@ import java.util.List;
 import com.cleverton.longmethoddetector.negocio.AnalisadorInformacoesMetodos;
 import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivos;
 
-public enum MetodoLongoProviderModel {
-	INSTANCE;
+public class MetodoLongoProviderModel {
 
-	private List<InformacoesMetodoModel> listaMetodosLongos;
-
-	private MetodoLongoProviderModel() {
-		listaMetodosLongos = new ArrayList<InformacoesMetodoModel>();
+	public static List<InformacoesMetodoModel> getMetodosLongos() {
 		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
+		System.out.println("Projetos a serem analisados:");
 		for (String string : projetos) {
 			System.out.println(string);
 		}
 		AnalisadorInformacoesMetodos analisador = new AnalisadorInformacoesMetodos();
-		ArrayList<InformacoesMetodoModel> informacoesMetodos;
+		ArrayList<InformacoesMetodoModel> informacoesMetodos = null;
 		try {
-			informacoesMetodos = analisador
-					.obterInformacoesMetodosDiretorios(projetos);
-			listaMetodosLongos.addAll(analisador.getMetodosLongosValorLimiar(informacoesMetodos));
+			informacoesMetodos = analisador.obterInformacoesMetodosDiretorios(projetos);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public List<InformacoesMetodoModel> getMetodosLongos() {
-		return listaMetodosLongos;
+		return analisador.getMetodosLongosValorLimiar(informacoesMetodos);
 	}
 
 }

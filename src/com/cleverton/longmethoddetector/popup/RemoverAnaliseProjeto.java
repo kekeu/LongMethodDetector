@@ -1,15 +1,12 @@
 package com.cleverton.longmethoddetector.popup;
 
-import java.util.ArrayList;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 
-import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivos;
-import com.cleverton.longmethoddetector.negocio.InformacoesProjeto;
+import com.cleverton.longmethoddetector.negocio.AtualizadorInformacoesMetodoLongo;
 
 public class RemoverAnaliseProjeto implements IEditorActionDelegate {
 
@@ -29,14 +26,9 @@ public class RemoverAnaliseProjeto implements IEditorActionDelegate {
 	 */
 	@Override
 	public void run(IAction action) {
-		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
-		String projetoSelecionado = InformacoesProjeto.getCurrentProject(); 
-		for (int i = 0; i < projetos.size(); i++) {
-			if (projetos.get(i).equals(projetoSelecionado)) {
-				projetos.remove(i);
-			}
-		}
-		CarregaSalvaArquivos.salvaArquivo(projetos);
+		AtualizadorInformacoesMetodoLongo atualizador = new AtualizadorInformacoesMetodoLongo();
+		atualizador.removeProjectAnalysis();
+		atualizador.refreshAll();
 		MessageDialog dialog = new MessageDialog(null, "Long Method Detector", null, 
 				"Projeto Removido da Analise", 
 				MessageDialog.INFORMATION, new String[] {"OK"}, 0);

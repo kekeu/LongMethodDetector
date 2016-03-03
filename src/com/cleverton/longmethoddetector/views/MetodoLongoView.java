@@ -11,6 +11,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
@@ -78,7 +81,7 @@ public class MetodoLongoView extends ViewPart {
 		viewer.setContentProvider(new ArrayContentProvider());
 		// get the content for the viewer, setInput will call getElements in the
 		// contentProvider
-		viewer.setInput(MetodoLongoProviderModel.INSTANCE.getMetodosLongos());
+		viewer.setInput(MetodoLongoProviderModel.getMetodosLongos());
 		// make the selection available to other views
 		getSite().setSelectionProvider(viewer);
 		// define layout for the viewer
@@ -102,7 +105,7 @@ public class MetodoLongoView extends ViewPart {
 	// create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
 		String[] titles = { "Diretório", "Método", "Linha Inicial", "Nº de Linhas" };
-		int[] bounds = { 400, 200, 200, 50 };
+		int[] bounds = { 400, 200, 100, 100 };
 
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -170,7 +173,20 @@ public class MetodoLongoView extends ViewPart {
 
 	//Used to update the viewer from outsite
 	public void refresh() {
-		viewer.refresh();
+		if (getViewer() == null) {
+			try {
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				if (page.findView(ID) != null) {
+					page.hideView(page.findView(ID));
+					page.showView(ID);
+				}
+			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} /* else {
+			viewer.refresh();
+		} */
 	} 
 
 	public void setFocus() {

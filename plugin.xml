@@ -48,41 +48,6 @@
             class="com.cleverton.longmethoddetector.preferences.PreferenceInitializer">
       </initializer>
    </extension>
-	<extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
-         <menu
-               label="Menu Método Longo"
-               mnemonic="M"
-               id="com.cleverton.longmethoddetector.menus.metodoLongoMenu">
-            <command
-                  commandId="com.cleverton.longmethoddetector.commands.metodoLongoCommand"
-                  mnemonic="S"
-                  id="com.cleverton.longmethoddetector.menus.metodoLongoCommand">
-            </command>
-         </menu>
-      </menuContribution>
-      <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-         <toolbar
-               id="com.cleverton.longmethoddetector.toolbars.metodoLongoToolbar">
-            <command
-                  commandId="com.cleverton.longmethoddetector.commands.metodoLongoCommand"
-                  icon="icons/sample.gif"
-                  tooltip="Say hello world"
-                  id="com.cleverton.longmethoddetector.toolbars.metodoLongoCommand">
-            </command>
-         </toolbar>
-      </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            commandId="com.cleverton.longmethoddetector.commands.metodoLongoCommand"
-            class="com.cleverton.longmethoddetector.handlers.MenuMetodoLongoHandler">
-      </handler>
-   </extension>
    
    <!-- Popup menu to add a menu to right click of a java file in the package explorer--> 	
 	<extension point="org.eclipse.ui.popupMenus">
