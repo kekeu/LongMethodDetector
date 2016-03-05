@@ -7,8 +7,7 @@ public class CarregaSalvaArquivos {
 
 	private static LeitorEscritorArquivo LEAProjetos ;
 
-	// carrega dados e joga arrayList
-
+	@SuppressWarnings("unchecked")
 	public static ArrayList<String> carregarProjetos() {
 		ArrayList<String> projetos = new ArrayList<>();
 		LEAProjetos = new LeitorEscritorArquivo(projetos, "Projetos.txt") ;
