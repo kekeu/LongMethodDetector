@@ -1,7 +1,18 @@
 package com.cleverton.longmethoddetector.views;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -14,10 +25,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ViewPart;
 
 import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
 import com.cleverton.longmethoddetector.model.MetodoLongoProviderModel;
+import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivos;
 
 public class MetodoLongoView extends ViewPart {
 	/**
@@ -33,42 +46,60 @@ public class MetodoLongoView extends ViewPart {
 		// set the sorter for the table
 		comparator = new MetodoLongoComparator();
 		viewer.setComparator(comparator);
+		insertActionTable();
 	}
 
-	/*public void name() {
+	public String alterarDireotioAbsolutoPorWorkspace(String local) {
+		String retorno = "";
+		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
+		for (String projeto : projetos) {
+			local = local.replace("\\", "/");
+			if (local.contains(projeto)) {
+				String[] partesProjeto = projeto.split("/");
+				String nomeProjeto = partesProjeto[partesProjeto.length-1];
+				String novoLocal = local.replace(projeto, "");
+				retorno = "/" + nomeProjeto + novoLocal;
+				retorno = retorno.replace("/", "\\");
+				return retorno;
+			}
+		}
+		return retorno;
+	}
+	
+	public void insertActionTable() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
-			public void doubleClick(DoubleClickEvent arg0) {
-				System.out.println("Linha: " + viewer.getTable().getSelectionIndex());
-				/*File fileToOpen = new File("Person.java");
-
-				String filePath = "..." ;
-				final IFile inputFile = ResourcesPlugin.getWorkspace().getRoot().
-						getFileForLocation(Path.fromOSString(filePath));
-				if (inputFile != null) {
-				    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				    IEditorPart openEditor = IDE.openEditor(page, inputFile);
-				}
-				Path path = new Path("C:/workspace/com.exemplo.helloworld/src/com/exemplo/helloworld/views/Person.java");
-				IFile fileToBeOpened = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				IEditorInput editorInput = new FileEditorInput(fileToBeOpened);
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				IWorkbenchPage page = window.getActivePage();
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+				InformacoesMetodoModel linha = (InformacoesMetodoModel) selection.getFirstElement();
+				/*System.out.println();
+				System.out.println("Diretório: "+linha.getDiretorioDaClasse()+"\n"
+						+ "Método: " + linha.getNomeMetodo() + "\n"
+						+ "Linha Inicial: " + linha.getLinhaInicial()+ "\n"
+						+ "Número de linhas: " + linha.getNumeroLinhas());
+				*/
+				String localWorkspace = alterarDireotioAbsolutoPorWorkspace(linha.getDiretorioDaClasse());
+				//System.out.println(novoWorkspace);
+				IFile file = ResourcesPlugin.getWorkspace().getRoot()
+						.getFile(new Path(localWorkspace));
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage();
+				HashMap map = new HashMap();
+				map.put(IMarker.LINE_NUMBER, linha.getLinhaInicial());
+				map.put(IWorkbenchPage.CHANGE_EDITOR_AREA_SHOW, 
+						"org.eclipse.ui.DefaultTextEditor");
+				IMarker marker;
 				try {
-					page.openEditor(editorInput, "org.eclipse.ui.DefaultTextEdtior");
-				} catch (PartInitException e) {
+					marker = file.createMarker(IMarker.LINE_NUMBER);
+					marker.setAttributes(map);
+					IDE.openEditor(page, marker);
+					marker.delete();
+				} catch (CoreException e) {
 					e.printStackTrace();
-				}
-				/*
-				int line = 10;
-				if (openEditor instanceof ITextEditor) {
-					ITextEditor textEditor = (ITextEditor) openEditor ;
-					IDocument document= textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
-					textEditor.selectAndReveal(document.getLineOffset(line - 1), document.getLineLength(line-1));
 				}
 			}
 		});
-	}*/
+	}
 
 	private void createViewer(Composite parent) {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
@@ -181,7 +212,6 @@ public class MetodoLongoView extends ViewPart {
 					page.showView(ID);
 				}
 			} catch (PartInitException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} /* else {

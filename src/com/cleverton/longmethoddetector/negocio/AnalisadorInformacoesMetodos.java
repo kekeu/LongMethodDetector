@@ -84,8 +84,8 @@ public class AnalisadorInformacoesMetodos {
 
 	public ArrayList<InformacoesMetodoModel> obterInformacoesMetodos(ArrayList<String> files) throws IOException {
 		ArrayList<InformacoesMetodoModel> listaInformacoesMetodos = new ArrayList<>();
-		for (String file : files) {
-			String textoDaClasse = readFileToString(file);
+		for (String localFile : files) {
+			String textoDaClasse = readFileToString(localFile);
 			ASTParser parser = ASTParser.newParser(AST.JLS8);
 			parser.setSource(textoDaClasse.toCharArray());
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -95,7 +95,7 @@ public class AnalisadorInformacoesMetodos {
 			cu.accept(new ASTVisitor() {
 				public boolean visit(MethodDeclaration node) {
 					InformacoesMetodoModel informacoesMetodo = new InformacoesMetodoModel();
-					informacoesMetodo.setDiretorioDaClasse(file);
+					informacoesMetodo.setDiretorioDaClasse(localFile);
 					informacoesMetodo.setLinhaInicial(cu.getLineNumber(node.getName().getStartPosition()));
 					informacoesMetodo.setNumeroLinhas(contarNumeroDeLinhas(node));
 					informacoesMetodo.setNomeMetodo(node.getName().toString());
