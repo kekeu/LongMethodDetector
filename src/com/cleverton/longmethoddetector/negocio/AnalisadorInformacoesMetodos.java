@@ -5,26 +5,54 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.cleverton.longmethoddetector.Activator;
 import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
+import com.cleverton.longmethoddetector.model.MetodoLongoProviderModel;
 import com.cleverton.longmethoddetector.preferences.PreferenceConstants;
+import com.cleverton.longmethoddetector.preferences.ValorMetodoLongoPreferencePage;
 
 /**
- * Obtém informações de métodos de classes: Local do arquivo, 
- * linha inicial do método e Número de linhas do método 
+ * 
  * @author Kekeu
  *
  */
 public class AnalisadorInformacoesMetodos {
 
+	public void realizarNovaAnalise() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		if (store.getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(
+				ValorMetodoLongoPreferencePage.OPCAOVALORLIMIAR)) {
+			MetodoLongoProviderModel.INSTANCE.metodosLongos = getMetodosLongosValorLimiar(
+					obterMetodosPorProjetosValorLimiar());
+		}
+	}
+	
+	public ArrayList<InformacoesMetodoModel> obterMetodosPorProjetosValorLimiar() {
+		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
+		projetos = InformacoesProjeto.validaProjetosAtivos(projetos);
+		System.out.println("Projetos a serem analisados:");
+		for (String string : projetos) {
+			System.out.println(string);
+		}
+		ArrayList<InformacoesMetodoModel> informacoesMetodos = null;
+		try {
+			informacoesMetodos = obterInformacoesMetodosDiretorios(projetos);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return informacoesMetodos;
+	}
+	
 	public ArrayList<InformacoesMetodoModel> getMetodosLongosValorLimiar(
 			ArrayList<InformacoesMetodoModel> informacoesMetodos) {
 		ArrayList<InformacoesMetodoModel> metodosLongos = new ArrayList<>();
@@ -86,11 +114,32 @@ public class AnalisadorInformacoesMetodos {
 		ArrayList<InformacoesMetodoModel> listaInformacoesMetodos = new ArrayList<>();
 		for (String localFile : files) {
 			String textoDaClasse = readFileToString(localFile);
+			//System.out.println();
+			//System.out.println("Arquivo: " + localFile);
 			ASTParser parser = ASTParser.newParser(AST.JLS8);
 			parser.setSource(textoDaClasse.toCharArray());
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 
 			final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+			
+			cu.accept(new ASTVisitor() {
+				@Override
+				public boolean visit(TypeDeclaration typeDeclaration) {
+					TypeDeclaration[] typeBind = typeDeclaration.getTypes();
+					for (TypeDeclaration bind : typeBind) {
+						System.out.println(bind.toString());
+						System.out.println();
+					}
+			        //ITypeBinding superTypeBind = typeBind.getSuperclass();
+			        /*ITypeBinding[] interfaceBinds = typeBind.getInterfaces();
+			        System.out.print("Interfaces");
+			        for (int i = 0; i < interfaceBinds.length; i++) {
+						System.err.print("   " + interfaceBinds[i]);
+					}*/
+			        //System.out.println();
+					return true;
+				}
+			});
 
 			cu.accept(new ASTVisitor() {
 				public boolean visit(MethodDeclaration node) {
@@ -99,6 +148,7 @@ public class AnalisadorInformacoesMetodos {
 					informacoesMetodo.setLinhaInicial(cu.getLineNumber(node.getName().getStartPosition()));
 					informacoesMetodo.setNumeroLinhas(contarNumeroDeLinhas(node));
 					informacoesMetodo.setNomeMetodo(node.getName().toString());
+					//System.out.println("Método: " + node.getName().toString());
 					listaInformacoesMetodos.add(informacoesMetodo);
 					return true;
 				}

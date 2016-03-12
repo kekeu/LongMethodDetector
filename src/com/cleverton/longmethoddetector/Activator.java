@@ -1,8 +1,17 @@
 package com.cleverton.longmethoddetector;
 
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import com.cleverton.longmethoddetector.reports.ResourceChangeReporter;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -28,8 +37,13 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		IResourceChangeListener listener = new ResourceChangeReporter();
+		   ResourcesPlugin.getWorkspace().addResourceChangeListener(listener,
+		      IResourceChangeEvent.PRE_CLOSE
+		      | IResourceChangeEvent.PRE_DELETE
+		      | IResourceChangeEvent.POST_CHANGE);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)

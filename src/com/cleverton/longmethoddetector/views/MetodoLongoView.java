@@ -22,6 +22,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -30,6 +32,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
 import com.cleverton.longmethoddetector.model.MetodoLongoProviderModel;
+import com.cleverton.longmethoddetector.negocio.AnalisadorInformacoesMetodos;
 import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivos;
 
 public class MetodoLongoView extends ViewPart {
@@ -41,6 +44,14 @@ public class MetodoLongoView extends ViewPart {
 	private TableViewer viewer;
 	private MetodoLongoComparator comparator;
 
+	@Override
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
+		super.init(site, memento);
+		if (MetodoLongoProviderModel.INSTANCE.metodosLongos == null) {
+			new AnalisadorInformacoesMetodos().realizarNovaAnalise();
+		}
+	}
+	
 	public void createPartControl(Composite parent) {
 		createViewer(parent);
 		// set the sorter for the table
@@ -65,7 +76,7 @@ public class MetodoLongoView extends ViewPart {
 		}
 		return retorno;
 	}
-	
+
 	public void insertActionTable() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
@@ -77,7 +88,7 @@ public class MetodoLongoView extends ViewPart {
 						+ "Método: " + linha.getNomeMetodo() + "\n"
 						+ "Linha Inicial: " + linha.getLinhaInicial()+ "\n"
 						+ "Número de linhas: " + linha.getNumeroLinhas());
-				*/
+				 */
 				String localWorkspace = alterarDireotioAbsolutoPorWorkspace(linha.getDiretorioDaClasse());
 				//System.out.println(novoWorkspace);
 				IFile file = ResourcesPlugin.getWorkspace().getRoot()
@@ -112,7 +123,7 @@ public class MetodoLongoView extends ViewPart {
 		viewer.setContentProvider(new ArrayContentProvider());
 		// get the content for the viewer, setInput will call getElements in the
 		// contentProvider
-		viewer.setInput(MetodoLongoProviderModel.getMetodosLongos());
+		viewer.setInput(MetodoLongoProviderModel.INSTANCE.metodosLongos);
 		// make the selection available to other views
 		getSite().setSelectionProvider(viewer);
 		// define layout for the viewer
@@ -203,20 +214,17 @@ public class MetodoLongoView extends ViewPart {
 	}
 
 	//Used to update the viewer from outsite
-	public void refresh() {
+	public void refresh(IWorkbenchPage page) {
 		if (getViewer() == null) {
 			try {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				if (page.findView(ID) != null) {
-					page.hideView(page.findView(ID));
-					page.showView(ID);
-				}
+				page.hideView(page.findView(ID));
+				page.showView(ID);
 			} catch (PartInitException e) {
 				e.printStackTrace();
 			}
-		} /* else {
+		} else {
 			viewer.refresh();
-		} */
+		} 
 	} 
 
 	public void setFocus() {
