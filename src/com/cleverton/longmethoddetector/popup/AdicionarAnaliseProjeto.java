@@ -7,6 +7,7 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 
 import com.cleverton.longmethoddetector.negocio.AtualizadorInformacoesMetodoLongo;
+import com.cleverton.longmethoddetector.negocio.GerenciadorProjeto;
 
 public class AdicionarAnaliseProjeto implements IEditorActionDelegate {
 
@@ -20,14 +21,10 @@ public class AdicionarAnaliseProjeto implements IEditorActionDelegate {
 
 	}
 
-	/*
-	 * This is used to find all the markers for an IResource and any sub resources.
-	 * Then output the number of markers that are returned
-	 */
 	@Override
 	public void run(IAction action) {
+		GerenciadorProjeto.addProjectAnalysis();
 		AtualizadorInformacoesMetodoLongo atualizador = new AtualizadorInformacoesMetodoLongo();
-		atualizador.addProjectAnalysis();
 		atualizador.refreshAll();
 		MessageDialog dialog = new MessageDialog(null, "Long Method Detector", null, 
 				"Projeto Adicionado Para Analise", 

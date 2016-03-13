@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -39,7 +38,7 @@ public class AnalisadorInformacoesMetodos {
 	
 	public ArrayList<InformacoesMetodoModel> obterMetodosPorProjetosValorLimiar() {
 		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
-		projetos = InformacoesProjeto.validaProjetosAtivos(projetos);
+		projetos = GerenciadorProjeto.validaProjetosAtivos(projetos);
 		System.out.println("Projetos a serem analisados:");
 		for (String string : projetos) {
 			System.out.println(string);

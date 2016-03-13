@@ -32,7 +32,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
 import com.cleverton.longmethoddetector.model.MetodoLongoProviderModel;
-import com.cleverton.longmethoddetector.negocio.AnalisadorInformacoesMetodos;
+import com.cleverton.longmethoddetector.negocio.AtualizadorInformacoesMetodoLongo;
 import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivos;
 
 public class MetodoLongoView extends ViewPart {
@@ -48,10 +48,10 @@ public class MetodoLongoView extends ViewPart {
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		if (MetodoLongoProviderModel.INSTANCE.metodosLongos == null) {
-			new AnalisadorInformacoesMetodos().realizarNovaAnalise();
+			new AtualizadorInformacoesMetodoLongo().refreshAll();
 		}
 	}
-	
+
 	public void createPartControl(Composite parent) {
 		createViewer(parent);
 		// set the sorter for the table
@@ -212,20 +212,6 @@ public class MetodoLongoView extends ViewPart {
 		};
 		return selectionAdapter;
 	}
-
-	//Used to update the viewer from outsite
-	public void refresh(IWorkbenchPage page) {
-		if (getViewer() == null) {
-			try {
-				page.hideView(page.findView(ID));
-				page.showView(ID);
-			} catch (PartInitException e) {
-				e.printStackTrace();
-			}
-		} else {
-			viewer.refresh();
-		} 
-	} 
 
 	public void setFocus() {
 		viewer.getControl().setFocus();

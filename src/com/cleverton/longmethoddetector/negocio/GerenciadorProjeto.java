@@ -2,7 +2,6 @@ package com.cleverton.longmethoddetector.negocio;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.internal.resources.Project;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -14,7 +13,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
 
-public class InformacoesProjeto {
+public class GerenciadorProjeto {
 
 	public static ArrayList<String> validaProjetosAtivos(ArrayList<String> projetos) {
 		for (int i = 0; i < projetos.size(); i++) {
@@ -48,6 +47,25 @@ public class InformacoesProjeto {
 			}
 		}
 		return project.getLocation().toString();  
+	}
+	
+	public static void addProjectAnalysis() {
+		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
+		projetos.add(GerenciadorProjeto.getCurrentProject());
+		System.out.println("Adicionou projeto: " +GerenciadorProjeto.getCurrentProject());
+		CarregaSalvaArquivos.salvaArquivo(projetos);
+	}
+
+	public static void removeProjectAnalysis() {
+		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
+		String projetoSelecionado = GerenciadorProjeto.getCurrentProject(); 
+		for (int i = 0; i < projetos.size(); i++) {
+			if (projetos.get(i).equals(projetoSelecionado)) {
+				System.out.println("Removeu Projeto: " + projetos.get(i));
+				projetos.remove(i);
+			}
+		}
+		CarregaSalvaArquivos.salvaArquivo(projetos);
 	}
 	
 }
