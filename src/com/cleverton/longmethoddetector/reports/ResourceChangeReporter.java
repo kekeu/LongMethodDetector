@@ -2,7 +2,6 @@ package com.cleverton.longmethoddetector.reports;
 
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.runtime.CoreException;
 
 import com.cleverton.longmethoddetector.negocio.AtualizadorInformacoesMetodoLongo;
 

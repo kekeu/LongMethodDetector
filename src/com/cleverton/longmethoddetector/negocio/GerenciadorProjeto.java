@@ -13,6 +13,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
 
+import com.cleverton.longmethoddetector.Activator;
+import com.cleverton.longmethoddetector.marker.Marcador;
+
 public class GerenciadorProjeto {
 
 	public static ArrayList<String> validaProjetosAtivos(ArrayList<String> projetos) {
@@ -24,7 +27,7 @@ public class GerenciadorProjeto {
 				projetos.remove(i);
 			}
 		}
-		CarregaSalvaArquivos.salvaArquivo(projetos);
+		Activator.projetos = projetos;
 		return projetos;
 	}
 	
@@ -50,22 +53,22 @@ public class GerenciadorProjeto {
 	}
 	
 	public static void addProjectAnalysis() {
-		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
-		projetos.add(GerenciadorProjeto.getCurrentProject());
+		Activator.projetos.add(GerenciadorProjeto.getCurrentProject());
 		System.out.println("Adicionou projeto: " +GerenciadorProjeto.getCurrentProject());
-		CarregaSalvaArquivos.salvaArquivo(projetos);
 	}
 
 	public static void removeProjectAnalysis() {
-		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
+		ArrayList<String> projetos = Activator.projetos;
 		String projetoSelecionado = GerenciadorProjeto.getCurrentProject(); 
 		for (int i = 0; i < projetos.size(); i++) {
 			if (projetos.get(i).equals(projetoSelecionado)) {
 				System.out.println("Removeu Projeto: " + projetos.get(i));
+				new Marcador().deleteMarcadorPorProjeto(projetos.get(i));
 				projetos.remove(i);
 			}
 		}
-		CarregaSalvaArquivos.salvaArquivo(projetos);
+		Activator.projetos = projetos;
+		new Marcador().deleteTodosMarcadores();
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.cleverton.longmethoddetector;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -7,6 +9,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.cleverton.longmethoddetector.negocio.AtualizadorInformacoesMetodoLongo;
+import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivos;
 import com.cleverton.longmethoddetector.reports.ResourceChangeReporter;
 
 /**
@@ -16,7 +20,7 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.cleverton.longmethoddetector"; //$NON-NLS-1$
-
+	public static ArrayList<String> projetos;
 	// The shared instance
 	private static Activator plugin;
 	
@@ -33,11 +37,13 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		IResourceChangeListener listener = new ResourceChangeReporter();
+		projetos = CarregaSalvaArquivos.carregarProjetos();
+		new AtualizadorInformacoesMetodoLongo().refreshAll();
+		/*IResourceChangeListener listener = new ResourceChangeReporter();
 		   ResourcesPlugin.getWorkspace().addResourceChangeListener(listener,
 		      IResourceChangeEvent.PRE_CLOSE
 		      | IResourceChangeEvent.PRE_DELETE
-		      | IResourceChangeEvent.POST_CHANGE);
+		      | IResourceChangeEvent.POST_CHANGE);*/
 	}
 	
 	/*
@@ -46,6 +52,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		CarregaSalvaArquivos.salvaArquivo(projetos);
 		super.stop(context);
 	}
 

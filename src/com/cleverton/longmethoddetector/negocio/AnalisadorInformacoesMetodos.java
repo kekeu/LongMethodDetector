@@ -11,7 +11,6 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.cleverton.longmethoddetector.Activator;
@@ -37,7 +36,7 @@ public class AnalisadorInformacoesMetodos {
 	}
 	
 	public ArrayList<InformacoesMetodoModel> obterMetodosPorProjetosValorLimiar() {
-		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
+		ArrayList<String> projetos = Activator.projetos;
 		projetos = GerenciadorProjeto.validaProjetosAtivos(projetos);
 		System.out.println("Projetos a serem analisados:");
 		for (String string : projetos) {
@@ -121,7 +120,7 @@ public class AnalisadorInformacoesMetodos {
 
 			final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 			
-			cu.accept(new ASTVisitor() {
+			/*cu.accept(new ASTVisitor() {
 				@Override
 				public boolean visit(TypeDeclaration typeDeclaration) {
 					TypeDeclaration[] typeBind = typeDeclaration.getTypes();
@@ -134,11 +133,11 @@ public class AnalisadorInformacoesMetodos {
 			        System.out.print("Interfaces");
 			        for (int i = 0; i < interfaceBinds.length; i++) {
 						System.err.print("   " + interfaceBinds[i]);
-					}*/
+					}
 			        //System.out.println();
 					return true;
 				}
-			});
+			}); */
 
 			cu.accept(new ASTVisitor() {
 				public boolean visit(MethodDeclaration node) {

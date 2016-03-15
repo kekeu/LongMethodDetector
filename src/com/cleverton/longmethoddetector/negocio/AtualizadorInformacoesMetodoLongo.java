@@ -5,13 +5,21 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.cleverton.longmethoddetector.marker.Marcador;
 import com.cleverton.longmethoddetector.views.MetodoLongoView;
 
 public class AtualizadorInformacoesMetodoLongo {
 
 	public void refreshAll() {
 		new AnalisadorInformacoesMetodos().realizarNovaAnalise();
+		refreshMarcadores();
 		refreshView();
+	}
+	
+	public void refreshMarcadores() {
+		Marcador marcador = new Marcador();
+		marcador.deleteTodosMarcadores();
+		marcador.adicionarMarcadoresMetodosLongos();
 	}
 	
 	public void refreshView() {

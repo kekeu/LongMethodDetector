@@ -1,8 +1,5 @@
 package com.cleverton.longmethoddetector.views;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -30,10 +27,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ViewPart;
 
+import com.cleverton.longmethoddetector.marker.Marcador;
 import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
 import com.cleverton.longmethoddetector.model.MetodoLongoProviderModel;
-import com.cleverton.longmethoddetector.negocio.AtualizadorInformacoesMetodoLongo;
-import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivos;
 
 public class MetodoLongoView extends ViewPart {
 	/**
@@ -47,9 +43,9 @@ public class MetodoLongoView extends ViewPart {
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
-		if (MetodoLongoProviderModel.INSTANCE.metodosLongos == null) {
+		/*if (MetodoLongoProviderModel.INSTANCE.metodosLongos == null) {
 			new AtualizadorInformacoesMetodoLongo().refreshAll();
-		}
+		}*/
 	}
 
 	public void createPartControl(Composite parent) {
@@ -60,49 +56,24 @@ public class MetodoLongoView extends ViewPart {
 		insertActionTable();
 	}
 
-	public String alterarDireotioAbsolutoPorWorkspace(String local) {
-		String retorno = "";
-		ArrayList<String> projetos = CarregaSalvaArquivos.carregarProjetos();
-		for (String projeto : projetos) {
-			local = local.replace("\\", "/");
-			if (local.contains(projeto)) {
-				String[] partesProjeto = projeto.split("/");
-				String nomeProjeto = partesProjeto[partesProjeto.length-1];
-				String novoLocal = local.replace(projeto, "");
-				retorno = "/" + nomeProjeto + novoLocal;
-				retorno = retorno.replace("/", "\\");
-				return retorno;
-			}
-		}
-		return retorno;
-	}
-
 	public void insertActionTable() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 				InformacoesMetodoModel linha = (InformacoesMetodoModel) selection.getFirstElement();
-				/*System.out.println();
-				System.out.println("Diretório: "+linha.getDiretorioDaClasse()+"\n"
-						+ "Método: " + linha.getNomeMetodo() + "\n"
-						+ "Linha Inicial: " + linha.getLinhaInicial()+ "\n"
-						+ "Número de linhas: " + linha.getNumeroLinhas());
-				 */
-				String localWorkspace = alterarDireotioAbsolutoPorWorkspace(linha.getDiretorioDaClasse());
-				//System.out.println(novoWorkspace);
+				String localWorkspace = Marcador.alterarDireotioAbsolutoPorWorkspace(
+						linha.getDiretorioDaClasse());
 				IFile file = ResourcesPlugin.getWorkspace().getRoot()
 						.getFile(new Path(localWorkspace));
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getActivePage();
-				HashMap map = new HashMap();
-				map.put(IMarker.LINE_NUMBER, linha.getLinhaInicial());
-				map.put(IWorkbenchPage.CHANGE_EDITOR_AREA_SHOW, 
-						"org.eclipse.ui.DefaultTextEditor");
 				IMarker marker;
 				try {
 					marker = file.createMarker(IMarker.LINE_NUMBER);
-					marker.setAttributes(map);
+					marker.setAttribute(IMarker.LINE_NUMBER, linha.getLinhaInicial());
+					marker.setAttribute(IWorkbenchPage.CHANGE_EDITOR_AREA_SHOW, 
+						"org.eclipse.ui.DefaultTextEditor");
 					IDE.openEditor(page, marker);
 					marker.delete();
 				} catch (CoreException e) {
