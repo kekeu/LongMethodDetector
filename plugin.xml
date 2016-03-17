@@ -73,37 +73,58 @@
 		</objectContribution>
 	</extension>
 	<!-- MARCADOR PERSONALIZADO -->
+	<!-- Marcador -->
 	<extension id="com.cleverton.longmethoddetector.mymarker"
     	point="org.eclipse.core.resources.markers">
+    	<super type="org.eclipse.core.resources.textmarker"/>
     	<super type="org.eclipse.core.resources.marker" />
     	<persistent value="false"/>
-    	<attribute name="description"/>
 	</extension>
-	<extension point="org.eclipse.ui.editors.annotationTypes">
-     	<type
-        	super="org.eclipse.ui.workbench.texteditor.warning"
-        	markerType="com.cleverton.longmethoddetector.mymarker"
-        	name="com.cleverton.longmethoddetector.myannotation"/>
-  	</extension>
-  	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+	<!-- Annotation specification:- describes what the annotation will look like and its properties -->
+  	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification"
+  		id="myannotationspecification">
      	<specification
-        annotationType="com.cleverton.longmethoddetector.myannotation"
-        icon="icons/sample.gif"
-        verticalRulerPreferenceKey="myMarkerIndicationInVerticalRuler"
-        verticalRulerPreferenceValue="true"
-        colorPreferenceKey="markerColor"
-        colorPreferenceValue="100,100,100"
-        contributesToHeader="false"
-        highlightPreferenceKey="markerHighlight"
-        highlightPreferenceValue="true"
-        includeOnPreferencePage="true"
-        overviewRulerPreferenceKey="markerOverview"
-        overviewRulerPreferenceValue="true"
-        presentationLayer="0"
-        symbolicIcon="warning"
-        textPreferenceKey="tarkerText"
-        textPreferenceValue="true"
-        textStylePreferenceKey="textStyle"
-        textStylePreferenceValue="BOX"/>
-  </extension>
+        	annotationType="com.cleverton.longmethoddetector.myannotation"
+        	icon="icons/sample.gif"
+        	overviewRulerPreferenceKey="markerOverview"
+        	overviewRulerPreferenceValue="true"
+        	colorPreferenceKey="markerColor"
+        	colorPreferenceValue="100,100,100"
+        	textPreferenceKey="tarkerText"
+        	textPreferenceValue="true"
+        	verticalRulerPreferenceKey="myMarkerIndicationInVerticalRuler"
+        	verticalRulerPreferenceValue="true"
+        	textStylePreferenceKey="textStyle"
+        	textStylePreferenceValue="BOX"
+        	
+        	contributesToHeader="false"
+        	highlightPreferenceKey="markerHighlight"
+        	highlightPreferenceValue="true"
+        	includeOnPreferencePage="true"
+        	presentationLayer="0"
+        	symbolicIcon="warning"/>
+  	</extension>
+  	<!-- Links the annotation spec to the marker --> 
+  	<extension point="org.eclipse.ui.editors.annotationTypes">
+     	<type
+     		markerSeverity="0"
+        	super="org.eclipse.ui.workbench.texteditor.info"
+        	name="com.cleverton.longmethoddetector.myannotation"
+        	markerType="com.cleverton.longmethoddetector.mymarker"/>
+  	</extension>
+  	<!--define the decorator -->
+	<extension point="org.eclipse.ui.decorators">
+		<decorator
+		    id="com.cleverton.longmethoddetector.filedecorator"
+		    label="MyMarker Decorator"
+		    state="true"
+		    quadrant = "BOTTOM_RIGHT"
+		    class="com.cleverton.longmethoddetector.marker.FileDecorator"
+		    adaptable="true"
+			lightweight="true">
+			<enablement>
+				<objectClass name="org.eclipse.core.resources.IResource"/>      
+			</enablement>
+		</decorator>
+	</extension>
 </plugin>

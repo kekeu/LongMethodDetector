@@ -14,15 +14,15 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
 
 import com.cleverton.longmethoddetector.Activator;
-import com.cleverton.longmethoddetector.marker.Marcador;
+import com.cleverton.longmethoddetector.marker.MarkerFactory;
 
 public class GerenciadorProjeto {
 
 	public static ArrayList<String> validaProjetosAtivos(ArrayList<String> projetos) {
 		for (int i = 0; i < projetos.size(); i++) {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			String[] aux = projetos.get(i).split("/");
-			IProject iProject = workspace.getRoot().getProject(aux[aux.length-1]);
+			IProject iProject = workspace.getRoot().getProject(
+					nomeProjetoPorCaminho(projetos.get(i)));
 			if (!(iProject.exists() && iProject.isOpen())) {
 				projetos.remove(i);
 			}
@@ -30,7 +30,12 @@ public class GerenciadorProjeto {
 		Activator.projetos = projetos;
 		return projetos;
 	}
-	
+
+	public static String nomeProjetoPorCaminho(String caminho) {
+		String[] partes = caminho.split("/");
+		return partes[partes.length-1];
+	}
+
 	public static String getCurrentProject() {    
 		IProject project = null;    
 		ISelectionService selectionService = PlatformUI.getWorkbench()
@@ -51,7 +56,7 @@ public class GerenciadorProjeto {
 		}
 		return project.getLocation().toString();  
 	}
-	
+
 	public static void addProjectAnalysis() {
 		Activator.projetos.add(GerenciadorProjeto.getCurrentProject());
 		System.out.println("Adicionou projeto: " +GerenciadorProjeto.getCurrentProject());
@@ -63,12 +68,12 @@ public class GerenciadorProjeto {
 		for (int i = 0; i < projetos.size(); i++) {
 			if (projetos.get(i).equals(projetoSelecionado)) {
 				System.out.println("Removeu Projeto: " + projetos.get(i));
-				new Marcador().deleteMarcadorPorProjeto(projetos.get(i));
+				new MarkerFactory().deleteMarcadorPorProjeto(projetos.get(i));
 				projetos.remove(i);
 			}
 		}
 		Activator.projetos = projetos;
-		new Marcador().deleteTodosMarcadores();
+		new MarkerFactory().deleteTodosMarcadores();
+		//AtualizadorInformacoesMetodoLongo.refreshProjetc(projetoSelecionado);
 	}
-	
 }

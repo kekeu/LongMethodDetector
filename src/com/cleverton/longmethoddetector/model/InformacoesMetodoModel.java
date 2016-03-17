@@ -6,16 +6,36 @@ public class InformacoesMetodoModel {
 	private int numeroLinhas;
 	private String diretorioDaClasse;
 	private String nomeMetodo;
+	private int charInicial;
+	private int charFinal;
 	
 	public InformacoesMetodoModel() {
 	}
 	
 	public InformacoesMetodoModel(int linhaInicial, int numeroLinhas, String diretorioDaClasse, 
-			String nomeMetodo) {
+			String nomeMetodo, int charInicial, int charFinal) {
 		this.linhaInicial = linhaInicial;
 		this.numeroLinhas = numeroLinhas;
 		this.diretorioDaClasse = diretorioDaClasse;
 		this.nomeMetodo = nomeMetodo;
+		this.charFinal = charFinal;
+		this.charInicial = charInicial;
+	}
+
+	public int getCharInicial() {
+		return charInicial;
+	}
+
+	public void setCharInicial(int charInicial) {
+		this.charInicial = charInicial;
+	}
+
+	public int getCharFinal() {
+		return charFinal;
+	}
+
+	public void setCharFinal(int charFinal) {
+		this.charFinal = charFinal;
 	}
 
 	public int getLinhaInicial() {

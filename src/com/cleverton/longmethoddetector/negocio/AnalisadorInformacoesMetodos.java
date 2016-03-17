@@ -119,35 +119,19 @@ public class AnalisadorInformacoesMetodos {
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 
 			final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
-			
-			/*cu.accept(new ASTVisitor() {
-				@Override
-				public boolean visit(TypeDeclaration typeDeclaration) {
-					TypeDeclaration[] typeBind = typeDeclaration.getTypes();
-					for (TypeDeclaration bind : typeBind) {
-						System.out.println(bind.toString());
-						System.out.println();
-					}
-			        //ITypeBinding superTypeBind = typeBind.getSuperclass();
-			        /*ITypeBinding[] interfaceBinds = typeBind.getInterfaces();
-			        System.out.print("Interfaces");
-			        for (int i = 0; i < interfaceBinds.length; i++) {
-						System.err.print("   " + interfaceBinds[i]);
-					}
-			        //System.out.println();
-					return true;
-				}
-			}); */
 
 			cu.accept(new ASTVisitor() {
 				public boolean visit(MethodDeclaration node) {
-					InformacoesMetodoModel informacoesMetodo = new InformacoesMetodoModel();
-					informacoesMetodo.setDiretorioDaClasse(localFile);
-					informacoesMetodo.setLinhaInicial(cu.getLineNumber(node.getName().getStartPosition()));
-					informacoesMetodo.setNumeroLinhas(contarNumeroDeLinhas(node));
-					informacoesMetodo.setNomeMetodo(node.getName().toString());
-					//System.out.println("Método: " + node.getName().toString());
-					listaInformacoesMetodos.add(informacoesMetodo);
+					if (!node.isConstructor()) {
+						InformacoesMetodoModel informacoesMetodo = new InformacoesMetodoModel();
+						informacoesMetodo.setDiretorioDaClasse(localFile);
+						informacoesMetodo.setLinhaInicial(cu.getLineNumber(node.getName().getStartPosition()));
+						informacoesMetodo.setNumeroLinhas(contarNumeroDeLinhas(node));
+						informacoesMetodo.setNomeMetodo(node.getName().toString());
+						informacoesMetodo.setCharInicial(node.getStartPosition());
+						informacoesMetodo.setCharFinal(node.getLength()+node.getStartPosition());
+						listaInformacoesMetodos.add(informacoesMetodo);
+					}
 					return true;
 				}
 			});
@@ -172,14 +156,20 @@ public class AnalisadorInformacoesMetodos {
 		return  fileData.toString();	
 	}
 
-	public int contarNumeroDeLinhas(MethodDeclaration metodoDeclaration) {
-		String[] linhasMetodo = metodoDeclaration.toString().split("\n"); 
-		if (metodoDeclaration.getJavadoc() == null) {
+	public int contarNumeroDeLinhas(MethodDeclaration node) {
+		String[] linhasMetodo = node.toString().split("\n"); 
+		if (node.getJavadoc() == null) {
 			return linhasMetodo.length;
 		} else {
-			String[] linhasTextoJavadoc = metodoDeclaration.getJavadoc().toString().split("\n");
+			String[] linhasTextoJavadoc = node.getJavadoc().toString().split("\n");
 			return linhasMetodo.length - linhasTextoJavadoc.length;
 		}
 	}
-
+	
+	public int qtdCaracteresJavadoc(MethodDeclaration node) {
+		if (node.getJavadoc() == null) {
+			return 0;
+		}
+		return node.getJavadoc().getLength();
+	}
 }

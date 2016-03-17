@@ -23,11 +23,11 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ViewPart;
 
-import com.cleverton.longmethoddetector.marker.Marcador;
+import com.cleverton.longmethoddetector.Activator;
+import com.cleverton.longmethoddetector.marker.MarkerFactory;
 import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
 import com.cleverton.longmethoddetector.model.MetodoLongoProviderModel;
 
@@ -62,18 +62,13 @@ public class MetodoLongoView extends ViewPart {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
 				InformacoesMetodoModel linha = (InformacoesMetodoModel) selection.getFirstElement();
-				String localWorkspace = Marcador.alterarDireotioAbsolutoPorWorkspace(
+				String localWorkspace = MarkerFactory.alterarDireotioAbsolutoPorWorkspace(
 						linha.getDiretorioDaClasse());
 				IFile file = ResourcesPlugin.getWorkspace().getRoot()
 						.getFile(new Path(localWorkspace));
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage();
-				IMarker marker;
+				IWorkbenchPage page = Activator.getActiveWorkbenchPage();
 				try {
-					marker = file.createMarker(IMarker.LINE_NUMBER);
-					marker.setAttribute(IMarker.LINE_NUMBER, linha.getLinhaInicial());
-					marker.setAttribute(IWorkbenchPage.CHANGE_EDITOR_AREA_SHOW, 
-						"org.eclipse.ui.DefaultTextEditor");
+					IMarker marker = MarkerFactory.marcadorOpenEditor(file, linha.getLinhaInicial());
 					IDE.openEditor(page, marker);
 					marker.delete();
 				} catch (CoreException e) {
