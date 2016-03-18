@@ -37,11 +37,6 @@ public class AnalisadorInformacoesMetodos {
 	
 	public ArrayList<InformacoesMetodoModel> obterMetodosPorProjetosValorLimiar() {
 		ArrayList<String> projetos = Activator.projetos;
-		projetos = GerenciadorProjeto.validaProjetosAtivos(projetos);
-		System.out.println("Projetos a serem analisados:");
-		for (String string : projetos) {
-			System.out.println(string);
-		}
 		ArrayList<InformacoesMetodoModel> informacoesMetodos = null;
 		try {
 			informacoesMetodos = obterInformacoesMetodosDiretorios(projetos);

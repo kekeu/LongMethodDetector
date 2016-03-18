@@ -18,7 +18,8 @@ import com.cleverton.longmethoddetector.marker.MarkerFactory;
 
 public class GerenciadorProjeto {
 
-	public static ArrayList<String> validaProjetosAtivos(ArrayList<String> projetos) {
+	public static void validaProjetosAtivos() {
+		ArrayList<String> projetos = Activator.projetos;
 		for (int i = 0; i < projetos.size(); i++) {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IProject iProject = workspace.getRoot().getProject(
@@ -28,7 +29,6 @@ public class GerenciadorProjeto {
 			}
 		}
 		Activator.projetos = projetos;
-		return projetos;
 	}
 
 	public static String nomeProjetoPorCaminho(String caminho) {

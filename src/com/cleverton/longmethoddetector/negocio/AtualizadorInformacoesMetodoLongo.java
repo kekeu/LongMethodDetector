@@ -12,6 +12,7 @@ import com.cleverton.longmethoddetector.views.MetodoLongoView;
 public class AtualizadorInformacoesMetodoLongo {
 
 	public void refreshAll() {
+		GerenciadorProjeto.validaProjetosAtivos();
 		new AnalisadorInformacoesMetodos().realizarNovaAnalise();
 		refreshMarcadores();
 		refreshView();
