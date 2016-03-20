@@ -89,7 +89,7 @@
         	overviewRulerPreferenceKey="markerOverview"
         	overviewRulerPreferenceValue="true"
         	colorPreferenceKey="markerColor"
-        	colorPreferenceValue="100,100,100"
+        	colorPreferenceValue="153,255,153"
         	textPreferenceKey="tarkerText"
         	textPreferenceValue="true"
         	verticalRulerPreferenceKey="myMarkerIndicationInVerticalRuler"

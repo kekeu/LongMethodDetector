@@ -18,6 +18,8 @@ import com.cleverton.longmethoddetector.marker.MarkerFactory;
 
 public class GerenciadorProjeto {
 
+	public final static int PROJETO_NAO_ENCONTRADO = -1; 
+	
 	public static void validaProjetosAtivos() {
 		ArrayList<String> projetos = Activator.projetos;
 		for (int i = 0; i < projetos.size(); i++) {
@@ -75,5 +77,24 @@ public class GerenciadorProjeto {
 		Activator.projetos = projetos;
 		new MarkerFactory().deleteTodosMarcadores();
 		//AtualizadorInformacoesMetodoLongo.refreshProjetc(projetoSelecionado);
+	}
+	
+	public static int posicaoProjetoAnalisado(String verificaProjeto) {
+		ArrayList<String> projetos = Activator.projetos;
+		for (int i = 0; i < projetos.size(); i++) {
+			if (projetos.get(i).equals(verificaProjeto)) {
+				return i;
+			}
+		}
+		return PROJETO_NAO_ENCONTRADO;
+	}
+	
+	public static void removerProjetoPorId(int posicao) {
+		Activator.projetos.remove(posicao);
+	}
+	
+	public static void alterarNameProjetoAnalisadoPorPosicao(String novoProjeto, int posicao) {
+		Activator.projetos.remove(posicao);
+		Activator.projetos.add(novoProjeto);
 	}
 }
