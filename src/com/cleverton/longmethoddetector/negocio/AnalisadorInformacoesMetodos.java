@@ -11,6 +11,8 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.cleverton.longmethoddetector.Activator;
@@ -34,7 +36,7 @@ public class AnalisadorInformacoesMetodos {
 					obterMetodosPorProjetosValorLimiar());
 		}
 	}
-	
+
 	public ArrayList<InformacoesMetodoModel> obterMetodosPorProjetosValorLimiar() {
 		ArrayList<String> projetos = Activator.projetos;
 		ArrayList<InformacoesMetodoModel> informacoesMetodos = null;
@@ -45,7 +47,7 @@ public class AnalisadorInformacoesMetodos {
 		}
 		return informacoesMetodos;
 	}
-	
+
 	public ArrayList<InformacoesMetodoModel> getMetodosLongosValorLimiar(
 			ArrayList<InformacoesMetodoModel> informacoesMetodos) {
 		ArrayList<InformacoesMetodoModel> metodosLongos = new ArrayList<>();
@@ -107,8 +109,6 @@ public class AnalisadorInformacoesMetodos {
 		ArrayList<InformacoesMetodoModel> listaInformacoesMetodos = new ArrayList<>();
 		for (String localFile : files) {
 			String textoDaClasse = readFileToString(localFile);
-			//System.out.println();
-			//System.out.println("Arquivo: " + localFile);
 			ASTParser parser = ASTParser.newParser(AST.JLS8);
 			parser.setSource(textoDaClasse.toCharArray());
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -116,16 +116,30 @@ public class AnalisadorInformacoesMetodos {
 			final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
 			cu.accept(new ASTVisitor() {
-				public boolean visit(MethodDeclaration node) {
-					if (!node.isConstructor()) {
-						InformacoesMetodoModel informacoesMetodo = new InformacoesMetodoModel();
-						informacoesMetodo.setDiretorioDaClasse(localFile);
-						informacoesMetodo.setLinhaInicial(cu.getLineNumber(node.getName().getStartPosition()));
-						informacoesMetodo.setNumeroLinhas(contarNumeroDeLinhas(node));
-						informacoesMetodo.setNomeMetodo(node.getName().toString());
-						informacoesMetodo.setCharInicial(node.getStartPosition());
-						informacoesMetodo.setCharFinal(node.getLength()+node.getStartPosition());
-						listaInformacoesMetodos.add(informacoesMetodo);
+
+				@Override
+				public boolean visit(TypeDeclaration node) {
+					Type superClass = node.getSuperclassType();
+					String classeExtends = "";
+					if (superClass != null) {
+						classeExtends = superClass.toString();
+					}
+					MethodDeclaration[] metodosClasse = node.getMethods();
+					for (int i = 0; i < metodosClasse.length; i++) {
+						if (!metodosClasse[i].isConstructor()) {
+							InformacoesMetodoModel informacoesMetodo = new InformacoesMetodoModel();
+							informacoesMetodo.setDiretorioDaClasse(localFile);
+							informacoesMetodo.setNomeClasse(node.getName().toString());
+							informacoesMetodo.setClasseExtends(classeExtends);
+							informacoesMetodo.setLinhaInicial(cu.getLineNumber(
+									metodosClasse[i].getName().getStartPosition()));
+							informacoesMetodo.setNumeroLinhas(contarNumeroDeLinhas(metodosClasse[i]));
+							informacoesMetodo.setNomeMetodo(metodosClasse[i].getName().toString());
+							informacoesMetodo.setCharInicial(metodosClasse[i].getStartPosition());
+							informacoesMetodo.setCharFinal(metodosClasse[i].getLength()+
+									metodosClasse[i].getStartPosition());
+							listaInformacoesMetodos.add(informacoesMetodo);
+						}
 					}
 					return true;
 				}
@@ -160,7 +174,7 @@ public class AnalisadorInformacoesMetodos {
 			return linhasMetodo.length - linhasTextoJavadoc.length;
 		}
 	}
-	
+
 	public int qtdCaracteresJavadoc(MethodDeclaration node) {
 		if (node.getJavadoc() == null) {
 			return 0;

@@ -5,6 +5,8 @@ public class InformacoesMetodoModel {
 	private int linhaInicial;
 	private int numeroLinhas;
 	private String diretorioDaClasse;
+	private String nomeClasse;
+	private String classeExtends;
 	private String nomeMetodo;
 	private int charInicial;
 	private int charFinal;
@@ -20,6 +22,22 @@ public class InformacoesMetodoModel {
 		this.nomeMetodo = nomeMetodo;
 		this.charFinal = charFinal;
 		this.charInicial = charInicial;
+	}
+	
+	public String getClasseExtends() {
+		return classeExtends;
+	}
+
+	public void setClasseExtends(String classeExtends) {
+		this.classeExtends = classeExtends;
+	}
+
+	public String getNomeClasse() {
+		return nomeClasse;
+	}
+
+	public void setNomeClasse(String nomeClasse) {
+		this.nomeClasse = nomeClasse;
 	}
 
 	public int getCharInicial() {

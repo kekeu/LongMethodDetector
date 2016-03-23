@@ -112,8 +112,8 @@ public class MetodoLongoView extends ViewPart {
 
 	// create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Diretório", "Método", "Linha Inicial", "Nº de Linhas" };
-		int[] bounds = { 400, 200, 100, 100 };
+		String[] titles = { "Diretório", "Classe", "Método", "Linha Inicial", "Nº de Linhas" };
+		int[] bounds = { 200, 200, 200, 100, 100 };
 
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -129,11 +129,20 @@ public class MetodoLongoView extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				return p.getNomeClasse();
+			}
+		});
+		
+		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
 				return p.getNomeMetodo();
 			}
 		});
 
-		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col = createTableViewerColumn(titles[3], bounds[3], 3);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -142,7 +151,7 @@ public class MetodoLongoView extends ViewPart {
 			}
 		});
 
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col = createTableViewerColumn(titles[4], bounds[4], 4);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {

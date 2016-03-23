@@ -44,9 +44,9 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		projetos = CarregaSalvaArquivos.carregarProjetos();
 		new AtualizadorInformacoesMetodoLongo().refreshAll();
-		IResourceChangeListener listener = new ResourceChangeReporter();
+		/*IResourceChangeListener listener = new ResourceChangeReporter();
 		   ResourcesPlugin.getWorkspace().addResourceChangeListener(listener,
-		      IResourceChangeEvent.PRE_CLOSE);
+		      IResourceChangeEvent.PRE_CLOSE);*/
 	}
 
 	/*
