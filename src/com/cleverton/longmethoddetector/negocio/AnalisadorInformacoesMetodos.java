@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -112,33 +114,21 @@ public class AnalisadorInformacoesMetodos {
 			ASTParser parser = ASTParser.newParser(AST.JLS8);
 			parser.setSource(textoDaClasse.toCharArray());
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
-
 			final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
 			cu.accept(new ASTVisitor() {
-
 				@Override
 				public boolean visit(TypeDeclaration node) {
-					Type superClass = node.getSuperclassType();
-					String classeExtends = "";
-					if (superClass != null) {
-						classeExtends = superClass.toString();
-					}
+					ArrayList<String> listaClassesImplementadas = obterListaClassesImplementadas(node);
+					Collections.sort(listaClassesImplementadas);
+					String arquiteturaClasse = transformarClassesImplementadasEmString(
+							listaClassesImplementadas);
+					String nomeDaClasse = node.getName().toString();
 					MethodDeclaration[] metodosClasse = node.getMethods();
 					for (int i = 0; i < metodosClasse.length; i++) {
 						if (!metodosClasse[i].isConstructor()) {
-							InformacoesMetodoModel informacoesMetodo = new InformacoesMetodoModel();
-							informacoesMetodo.setDiretorioDaClasse(localFile);
-							informacoesMetodo.setNomeClasse(node.getName().toString());
-							informacoesMetodo.setClasseExtends(classeExtends);
-							informacoesMetodo.setLinhaInicial(cu.getLineNumber(
-									metodosClasse[i].getName().getStartPosition()));
-							informacoesMetodo.setNumeroLinhas(contarNumeroDeLinhas(metodosClasse[i]));
-							informacoesMetodo.setNomeMetodo(metodosClasse[i].getName().toString());
-							informacoesMetodo.setCharInicial(metodosClasse[i].getStartPosition());
-							informacoesMetodo.setCharFinal(metodosClasse[i].getLength()+
-									metodosClasse[i].getStartPosition());
-							listaInformacoesMetodos.add(informacoesMetodo);
+							listaInformacoesMetodos.add(obterInformacaoDoMetodo(localFile, cu,
+									nomeDaClasse, arquiteturaClasse, metodosClasse[i]));
 						}
 					}
 					return true;
@@ -180,5 +170,42 @@ public class AnalisadorInformacoesMetodos {
 			return 0;
 		}
 		return node.getJavadoc().getLength();
+	}
+	
+	private ArrayList<String> obterListaClassesImplementadas(TypeDeclaration node) {
+		Type superClass = node.getSuperclassType();
+		ArrayList<String> listaExtensImplemteds = new ArrayList<>();
+		if (superClass != null) {
+			listaExtensImplemteds.add(superClass.toString());
+		}
+		List<?> lista = node.superInterfaceTypes();
+		if (lista.size()>0) {
+			listaExtensImplemteds.add(node.getName().toString());
+		}
+		return listaExtensImplemteds;
+	}
+	
+	private String transformarClassesImplementadasEmString(ArrayList<String> lista) {
+		String retorno = "";
+		for (String string : lista) {
+			retorno += string;
+		}
+		return retorno;
+	}
+
+	private InformacoesMetodoModel obterInformacaoDoMetodo(String localFile, final CompilationUnit cu,
+			String nomeClasse, String arquiteturaClasse, MethodDeclaration metodo) {
+		InformacoesMetodoModel informacoesMetodo = new InformacoesMetodoModel();
+		informacoesMetodo.setDiretorioDaClasse(localFile);
+		informacoesMetodo.setNomeClasse(nomeClasse);
+		informacoesMetodo.setArquiteturaClasse(arquiteturaClasse);
+		informacoesMetodo.setLinhaInicial(cu.getLineNumber(
+				metodo.getName().getStartPosition()));
+		informacoesMetodo.setNumeroLinhas(contarNumeroDeLinhas(metodo));
+		informacoesMetodo.setNomeMetodo(metodo.getName().toString());
+		informacoesMetodo.setCharInicial(metodo.getStartPosition());
+		informacoesMetodo.setCharFinal(metodo.getLength()+
+				metodo.getStartPosition());
+		return informacoesMetodo;
 	}
 }

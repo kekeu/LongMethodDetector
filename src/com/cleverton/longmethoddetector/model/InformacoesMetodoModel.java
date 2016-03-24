@@ -6,7 +6,7 @@ public class InformacoesMetodoModel {
 	private int numeroLinhas;
 	private String diretorioDaClasse;
 	private String nomeClasse;
-	private String classeExtends;
+	private String arquiteturaClasse;
 	private String nomeMetodo;
 	private int charInicial;
 	private int charFinal;
@@ -24,12 +24,12 @@ public class InformacoesMetodoModel {
 		this.charInicial = charInicial;
 	}
 	
-	public String getClasseExtends() {
-		return classeExtends;
+	public String getArquiteturaClasse() {
+		return arquiteturaClasse;
 	}
 
-	public void setClasseExtends(String classeExtends) {
-		this.classeExtends = classeExtends;
+	public void setArquiteturaClasse(String classeExtends) {
+		this.arquiteturaClasse = classeExtends;
 	}
 
 	public String getNomeClasse() {
