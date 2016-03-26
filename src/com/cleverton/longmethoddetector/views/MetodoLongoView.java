@@ -28,8 +28,8 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.cleverton.longmethoddetector.Activator;
 import com.cleverton.longmethoddetector.marker.MarkerFactory;
-import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
-import com.cleverton.longmethoddetector.model.MetodoLongoProviderModel;
+import com.cleverton.longmethoddetector.model.DadosMetodoLongo;
+import com.cleverton.longmethoddetector.model.ProviderModel;
 
 public class MetodoLongoView extends ViewPart {
 	/**
@@ -61,7 +61,7 @@ public class MetodoLongoView extends ViewPart {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-				InformacoesMetodoModel linha = (InformacoesMetodoModel) selection.getFirstElement();
+				DadosMetodoLongo linha = (DadosMetodoLongo) selection.getFirstElement();
 				String localWorkspace = MarkerFactory.alterarDireotioAbsolutoPorWorkspace(
 						linha.getDiretorioDaClasse());
 				IFile file = ResourcesPlugin.getWorkspace().getRoot()
@@ -89,7 +89,7 @@ public class MetodoLongoView extends ViewPart {
 		viewer.setContentProvider(new ArrayContentProvider());
 		// get the content for the viewer, setInput will call getElements in the
 		// contentProvider
-		viewer.setInput(MetodoLongoProviderModel.INSTANCE.metodosLongos);
+		viewer.setInput(ProviderModel.INSTANCE.metodoslongos);
 		// make the selection available to other views
 		getSite().setSelectionProvider(viewer);
 		// define layout for the viewer
@@ -119,7 +119,7 @@ public class MetodoLongoView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				DadosMetodoLongo p = (DadosMetodoLongo) element;
 				return p.getDiretorioDaClasse();
 			}
 		});
@@ -128,7 +128,7 @@ public class MetodoLongoView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				DadosMetodoLongo p = (DadosMetodoLongo) element;
 				return p.getNomeClasse();
 			}
 		});
@@ -137,7 +137,7 @@ public class MetodoLongoView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				DadosMetodoLongo p = (DadosMetodoLongo) element;
 				return p.getNomeMetodo();
 			}
 		});
@@ -146,7 +146,7 @@ public class MetodoLongoView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				DadosMetodoLongo p = (DadosMetodoLongo) element;
 				return p.getLinhaInicial()+"";
 			}
 		});
@@ -155,7 +155,7 @@ public class MetodoLongoView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				InformacoesMetodoModel p = (InformacoesMetodoModel) element;
+				DadosMetodoLongo p = (DadosMetodoLongo) element;
 				return p.getNumeroLinhas()+"";
 			}
 		});

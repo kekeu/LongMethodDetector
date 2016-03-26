@@ -20,8 +20,7 @@ public class GerenciadorProjeto {
 
 	public final static int PROJETO_NAO_ENCONTRADO = -1; 
 	
-	public static void validaProjetosAtivos() {
-		ArrayList<String> projetos = Activator.projetos;
+	public static void validaProjetosAtivos(ArrayList<String> projetos) {
 		for (int i = 0; i < projetos.size(); i++) {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IProject iProject = workspace.getRoot().getProject(

@@ -3,7 +3,7 @@ package com.cleverton.longmethoddetector.negocio;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class CarregaSalvaArquivos {
+public class CarregaSalvaArquivo {
 
 	private static LeitorEscritorArquivo LEAProjetos ;
 

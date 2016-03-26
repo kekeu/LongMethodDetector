@@ -15,7 +15,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.osgi.framework.BundleContext;
 
 import com.cleverton.longmethoddetector.negocio.AtualizadorInformacoesMetodoLongo;
-import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivos;
+import com.cleverton.longmethoddetector.negocio.CarregaSalvaArquivo;
 import com.cleverton.longmethoddetector.reports.ResourceChangeReporter;
 
 /**
@@ -42,7 +42,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		projetos = CarregaSalvaArquivos.carregarProjetos();
+		projetos = CarregaSalvaArquivo.carregarProjetos();
 		new AtualizadorInformacoesMetodoLongo().refreshAll();
 		/*IResourceChangeListener listener = new ResourceChangeReporter();
 		   ResourcesPlugin.getWorkspace().addResourceChangeListener(listener,
@@ -55,7 +55,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		CarregaSalvaArquivos.salvaArquivo(projetos);
+		CarregaSalvaArquivo.salvaArquivo(projetos);
 		super.stop(context);
 	}
 

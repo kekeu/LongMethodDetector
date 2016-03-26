@@ -20,8 +20,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 
 import com.cleverton.longmethoddetector.Activator;
-import com.cleverton.longmethoddetector.model.InformacoesMetodoModel;
-import com.cleverton.longmethoddetector.model.MetodoLongoProviderModel;
+import com.cleverton.longmethoddetector.model.DadosMetodoLongo;
 import com.cleverton.longmethoddetector.negocio.GerenciadorProjeto;
 
 public class MarkerFactory {
@@ -31,7 +30,7 @@ public class MarkerFactory {
 	//Annotation ID
 	public static final String ID_ANNOTATION = "com.cleverton.longmethoddetector.myannotation";
 
-	public static IMarker criarMarcador(IResource resource, InformacoesMetodoModel informacoes) 
+	public static IMarker criarMarcador(IResource resource, DadosMetodoLongo informacoes) 
 			throws CoreException {
 		IMarker marker = null;
 		//note: you use the id that is defined in your plugin.xml
@@ -75,21 +74,19 @@ public class MarkerFactory {
 		}
 	}
 
-	public void adicionarMarcadoresMetodosLongos() throws CoreException {
+	public void adicionarMarcadoresMetodosLongos(ArrayList<DadosMetodoLongo> metodosLongos) throws CoreException {
 		ITextEditor editor = (ITextEditor) Activator.getActiveWorkbenchPage().getActiveEditor();
-		for (InformacoesMetodoModel informacoesML : MetodoLongoProviderModel.
-				INSTANCE.metodosLongos) {
+		for (DadosMetodoLongo metodoLongo : metodosLongos) {
 			String localWorkspace = alterarDireotioAbsolutoPorWorkspace(
-					informacoesML.getDiretorioDaClasse());
+					metodoLongo.getDiretorioDaClasse());
 			IFile file = ResourcesPlugin.getWorkspace().getRoot()
 					.getFile(new Path(localWorkspace));
 			if (editor == null) {
 				editor = (ITextEditor)IDE.openEditor(Activator.getActiveWorkbenchPage(), file);
 			}
-			IMarker marker = criarMarcador(file, informacoesML);
+			IMarker marker = criarMarcador(file, metodoLongo);
 			if (!marker.exists()) {
-				adicionarAnnotation(marker, informacoesML.getCharInicial(),
-						informacoesML.getCharFinal(), editor);
+				adicionarAnnotation(marker, metodoLongo, editor);
 			}
 		}
 	}
@@ -127,7 +124,7 @@ public class MarkerFactory {
 		return retorno;
 	}
 
-	public static void adicionarAnnotation(IMarker marker, int inicio, int fim, ITextEditor editor) {
+	public static void adicionarAnnotation(IMarker marker, DadosMetodoLongo metodo, ITextEditor editor) {
 		//The DocumentProvider enables to get the document currently loaded in the editor
 		IDocumentProvider idp = editor.getDocumentProvider();
 		//This is the document we want to connect to. This is taken from the current editor input.
@@ -138,7 +135,7 @@ public class MarkerFactory {
 		SimpleMarkerAnnotation ma = new SimpleMarkerAnnotation(ID_ANNOTATION, marker);
 		//Finally add the new annotation to the model
 		iamf.connect(document);
-		iamf.addAnnotation(ma,new Position(inicio, fim));
+		iamf.addAnnotation(ma,new Position(metodo.getCharInicial(), metodo.getCharFinal()));
 		iamf.disconnect(document);
 	}
 
