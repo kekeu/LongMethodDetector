@@ -74,18 +74,18 @@ public class GerenciadorProjeto {
 			}
 		}
 		Activator.projetos = projetos;
-		new MarkerFactory().deleteTodosMarcadores();
+		//new MarkerFactory().deleteTodosMarcadores();
 		//AtualizadorInformacoesMetodoLongo.refreshProjetc(projetoSelecionado);
 	}
 	
-	public static int posicaoProjetoAnalisado(String verificaProjeto) {
+	public static boolean projetoEstaNaAnalise(String verificaProjeto) {
 		ArrayList<String> projetos = Activator.projetos;
 		for (int i = 0; i < projetos.size(); i++) {
 			if (projetos.get(i).equals(verificaProjeto)) {
-				return i;
+				return true;
 			}
 		}
-		return PROJETO_NAO_ENCONTRADO;
+		return false;
 	}
 	
 	public static void removerProjetoPorId(int posicao) {

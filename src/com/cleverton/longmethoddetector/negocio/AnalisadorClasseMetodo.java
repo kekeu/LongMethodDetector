@@ -108,7 +108,7 @@ public class AnalisadorClasseMetodo {
 		}
 		List<?> lista = node.superInterfaceTypes();
 		for (Object object : lista) {
-			System.out.println(object.toString());
+			//System.out.println(object.toString());
 			listaEI.add(object.toString());
 		}
 		return listaEI;

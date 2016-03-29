@@ -23,9 +23,9 @@ public class AtualizadorInformacoesMetodoLongo {
 		AnalisadorProjeto analisadorProjeto = new AnalisadorProjeto();
 		GerenciadorProjeto.validaProjetosAtivos(Activator.projetos);
 		atulizarDadosProviderModel(analisadorProjeto);
-		System.out.println("\n\n\n\n");
+		/*System.out.println("\n\n\n\n");
 		System.out.println(ProviderModel.INSTANCE.metodoslongos.size());
-		System.out.println("\n\n\n\n");
+		System.out.println("\n\n\n\n");*/
 		if (ProviderModel.INSTANCE.metodoslongos != null) {
 			refreshMarcadores(ProviderModel.INSTANCE.metodoslongos);
 			refreshView();
@@ -97,5 +97,5 @@ public class AtualizadorInformacoesMetodoLongo {
 				e.printStackTrace();
 			}
 		}
-	}*/
+	} */
 }

@@ -18,8 +18,8 @@ public class FiltrarMetodosLongos {
 		int valorLimiar = Integer.parseInt(store.getString(PreferenceConstants.VALOR_LIMIAR));
 		ArrayList<DadosMetodoLongo> listaMetodosLongos = new ArrayList<>();
 		for (DadosClasse classe : dadosClasse) {
-			System.out.println(classe.getNomeClasse() +"  --  "+classe.getMetodos().size());
-			System.out.println();
+			//System.out.println(classe.getNomeClasse() +"  --  "+classe.getMetodos().size());
+			//System.out.println();
 			for (DadosMetodo metodo : classe.getMetodos()) {
 				if (metodo.getNumeroLinhas() >= valorLimiar) {
 					DadosMetodoLongo dadosML = new DadosMetodoLongo();
