@@ -34,6 +34,11 @@ public class RemoverAnaliseProjeto implements IEditorActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
+		String projetoSelecionado = GerenciadorProjeto.getCurrentProject();
+		if (GerenciadorProjeto.projetoEstaNaAnalise(projetoSelecionado)) {
+			action.setEnabled(true);
+		} else {
+			action.setEnabled(false);
+		}
 	}
 }

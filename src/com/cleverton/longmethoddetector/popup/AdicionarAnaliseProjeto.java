@@ -18,7 +18,6 @@ public class AdicionarAnaliseProjeto implements IEditorActionDelegate {
 	@Override
 	public void setActiveEditor(IAction action, IEditorPart editor) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -34,7 +33,12 @@ public class AdicionarAnaliseProjeto implements IEditorActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
+		String projetoSelecionado = GerenciadorProjeto.getCurrentProject();
+		if (GerenciadorProjeto.projetoEstaNaAnalise(projetoSelecionado)) {
+			action.setEnabled(false);
+		} else {
+			action.setEnabled(true);
+		}
 	}
 
 }
