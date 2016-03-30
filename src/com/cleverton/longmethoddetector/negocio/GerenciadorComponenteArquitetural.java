@@ -1,33 +1,108 @@
 package com.cleverton.longmethoddetector.negocio;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.cleverton.longmethoddetector.model.DadosClasse;
+import com.cleverton.longmethoddetector.model.DadosComponentesArquiteturais;
 import com.cleverton.longmethoddetector.model.ProviderModel;
 
 public class GerenciadorComponenteArquitetural {
 
 	public static void main(String[] args) {
 		GerenciadorComponenteArquitetural analisadorProjeto = new GerenciadorComponenteArquitetural();
-		analisadorProjeto.criarGruposComponentesArquiteturais();
+		LinkedList<DadosComponentesArquiteturais> teste = 
+				analisadorProjeto.criarTabelaComponentesArquiteturais("C:\\runtime-EclipseApplication\\Projeto_P2");
+		System.out.println();
+		System.out.println("Tabela");
+		System.out.println("extendsClass | implementsArquitecture |  "
+				+ "implementsAPIJava   | Mediana |  PrimeiroQuartil   | TerceiroQuartil ");
+		System.out.println();
+		for (DadosComponentesArquiteturais dca : teste) {
+			System.out.println(dca.getExtendsClass()+" | " + dca.getImplementsArquitecture() + " | " + 
+					dca.getImplementsAPIJava() + "   | ------- | ------------- | ----------- ");
+		}
 		System.out.println();
 	}
 
+	public LinkedList<DadosComponentesArquiteturais> criarTabelaComponentesArquiteturais(
+			String projetoExemplo) {
+		LinkedList<List<DadosClasse>> grupos = criarGruposComponentesArquiteturais(projetoExemplo);
+		LinkedList<DadosComponentesArquiteturais> tabelaComponentes = new LinkedList<>();
+		for (List<DadosClasse> grupo : grupos) {
+			DadosComponentesArquiteturais dadosCA = new DadosComponentesArquiteturais();
+			// TODO: Obter valores da mediana e dos quartis 
+			if (grupoEhRegra1(grupo)) {
+				dadosCA.setExtendsClass(grupo.get(0).getClassesExtendsImplements().get(0));
+				dadosCA.setImplementsAPIJava(null);
+				dadosCA.setImplementsArquitecture(null);
+			} else {
+				if (grupoEhRegra2(grupo)) {
+					dadosCA.setExtendsClass(null);
+					dadosCA.setImplementsAPIJava(null);
+					dadosCA.setImplementsArquitecture(obterClasseImplementadaEmComum(
+							grupo.get(0), grupo.get(1)));
+				} else {
+					if (grupoEhRegra3(grupo)) {
+						dadosCA.setExtendsClass(null);
+						dadosCA.setImplementsAPIJava(obterClasseImplementadaEmComum(
+								grupo.get(0), grupo.get(1)));
+						dadosCA.setImplementsArquitecture(null);
+					} else {
+						// É o grupo das classes não classificadas
+						dadosCA.setExtendsClass(null);
+						dadosCA.setImplementsAPIJava(null);
+						dadosCA.setImplementsArquitecture(null);
+					}
+				}
+			}
+			tabelaComponentes.add(dadosCA);
+		}
+		return tabelaComponentes;
+	}
 
-	public void criarGruposComponentesArquiteturais() {
-		String projetoExemplo = "C:\\runtime-EclipseApplication\\Projeto_P2";
-		/*Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.VALOR_LIMIAR)*/
+	private boolean grupoEhRegra3(List<DadosClasse> grupo) {
+		if (grupo.size() > 1) {
+			if (temClasseImplementada(grupo.get(0)) && !implementaInterfaceDaArquitetura(grupo.get(0)) &&
+					implementaMesmaClasse(grupo.get(0), grupo.get(1))) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean grupoEhRegra2(List<DadosClasse> grupo) {
+		if (grupo.size() > 1) {
+			if (temClasseImplementada(grupo.get(0)) && implementaInterfaceDaArquitetura(grupo.get(0))
+					&& implementaMesmaClasse(grupo.get(0), grupo.get(1))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean grupoEhRegra1(List<DadosClasse> grupo) {
+		if (grupo.size() > 1) {
+			if (grupo.get(0).getClassesExtendsImplements().get(0) != null && 
+					extendMesmaClasse(grupo.get(0), grupo.get(1))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public LinkedList<List<DadosClasse>> criarGruposComponentesArquiteturais(String projetoExemplo) {
 		ArrayList<String> listaProjetoExemplo = new ArrayList<String>();
 		listaProjetoExemplo.add(projetoExemplo);
 		AnalisadorProjeto analisador = new AnalisadorProjeto();
-
 		List<DadosClasse> listaClasses = analisador.getInfoMetodosPorProjetos(listaProjetoExemplo, true);
 		LinkedList<List<DadosClasse>> grupos = new LinkedList<List<DadosClasse>>();
 		for (DadosClasse classe: listaClasses) {
 			classificarClassesGrupos(classe, grupos);
 		}
+		formarGrupoClassesNaoClassificadas(grupos);
 		for (int i = 0; i < grupos.size(); i++) {
 			System.out.println("Grupo "+ (i+1));
 			for (int j = 0; j < grupos.get(i).size(); j++) {
@@ -35,6 +110,21 @@ public class GerenciadorComponenteArquitetural {
 			}
 			System.out.println();
 			System.out.println();
+		}
+		return grupos;
+	}
+
+	public void formarGrupoClassesNaoClassificadas(LinkedList<List<DadosClasse>> grupos) {
+		List<DadosClasse> novoGrupo = new ArrayList<>();
+		for(Iterator<List<DadosClasse>> iter = grupos.iterator(); iter.hasNext();) {
+			List<DadosClasse> data = iter.next();
+		    if (data.size() == 1) {
+		    	novoGrupo.add(data.get(0));
+		    	iter.remove();
+		    }
+		}
+		if (novoGrupo.size() > 0) {
+			grupos.add(novoGrupo);
 		}
 	}
 
@@ -55,20 +145,19 @@ public class GerenciadorComponenteArquitetural {
 	public boolean adicionarClasseGrupo(DadosClasse classe, List<DadosClasse> grupo) {
 		// Regra 1
 		if ((classe.getClassesExtendsImplements().get(0) != null) && 
-				(classe.getClassesExtendsImplements().get(0).equals(
-						grupo.get(0).getClassesExtendsImplements().get(0)))) {
+				extendMesmaClasse(classe, grupo.get(0))) {
 			grupo.add(classe);
 			return true;
 		} else {
 			// Regra 2
 			if(temClasseImplementada(classe) && implementaInterfaceDaArquitetura(classe) && 
-					implementaMesmaClasseDoGrupo(classe, grupo)) {
+					implementaMesmaClasse(classe, grupo.get(0))) {
 				grupo.add(classe);
 				return true;
 			} else {
 				// Regra 3
 				if (temClasseImplementada(classe) && !implementaInterfaceDaArquitetura(classe) &&
-						implementaMesmaClasseDoGrupo(classe, grupo)) {
+						implementaMesmaClasse(classe, grupo.get(0))) {
 					grupo.add(classe);
 					return true;
 				} /*else {
@@ -82,19 +171,19 @@ public class GerenciadorComponenteArquitetural {
 		return false;
 	}
 
-	private boolean classePossuiPrefixoSufixoIgual(DadosClasse classe, List<DadosClasse> grupo) {
-		// TODO Implementar
-		return false;
+	private boolean extendMesmaClasse(DadosClasse classe, DadosClasse grupo) {
+		return classe.getClassesExtendsImplements().get(0).equals(
+				grupo.getClassesExtendsImplements().get(0));
 	}
 
-	public boolean implementaMesmaClasseDoGrupo(DadosClasse classe, List<DadosClasse> grupo) {
-		if (!temClasseImplementada(grupo.get(0))) {
+	public boolean implementaMesmaClasse(DadosClasse classe, DadosClasse grupo) {
+		if (!temClasseImplementada(grupo)) {
 			return false;
 		}
 		for (int i = 1; i < classe.getClassesExtendsImplements().size(); i++) {
-			for (int j = 1; j < grupo.get(0).getClassesExtendsImplements().size(); j++) {
+			for (int j = 1; j < grupo.getClassesExtendsImplements().size(); j++) {
 				if (classe.getClassesExtendsImplements().get(i).equals(
-						grupo.get(0).getClassesExtendsImplements().get(j))) {
+						grupo.getClassesExtendsImplements().get(j))) {
 					return true;
 				}
 			}
@@ -108,7 +197,7 @@ public class GerenciadorComponenteArquitetural {
 		}
 		return false;
 	}
-	
+
 	public boolean implementaInterfaceDaArquitetura(DadosClasse classe) {
 		ArrayList<String> interfacesAPI = ProviderModel.INSTANCE.getInterfacesAPI(); 
 		for (int i = 1; i < classe.getClassesExtendsImplements().size(); i++) {
@@ -121,4 +210,16 @@ public class GerenciadorComponenteArquitetural {
 		return true;
 	}
 
+	public String obterClasseImplementadaEmComum(DadosClasse classe, DadosClasse grupo) {
+		for (int i = 1; i < classe.getClassesExtendsImplements().size(); i++) {
+			for (int j = 1; j < grupo.getClassesExtendsImplements().size(); j++) {
+				if (classe.getClassesExtendsImplements().get(i).equals(
+						grupo.getClassesExtendsImplements().get(j))) {
+					return classe.getClassesExtendsImplements().get(i);
+				}
+			}
+		}
+		return null;
+	}
+	
 }
