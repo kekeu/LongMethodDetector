@@ -19,13 +19,10 @@ import com.cleverton.longmethoddetector.views.MetodoLongoView;
 
 public class AtualizadorInformacoesMetodoLongo {
 
-	public void refreshAll() {
+	public static void refreshAll() {
 		AnalisadorProjeto analisadorProjeto = new AnalisadorProjeto();
 		GerenciadorProjeto.validaProjetosAtivos(Activator.projetos);
 		atulizarDadosProviderModel(analisadorProjeto);
-		/*System.out.println("\n\n\n\n");
-		System.out.println(ProviderModel.INSTANCE.metodoslongos.size());
-		System.out.println("\n\n\n\n");*/
 		if (ProviderModel.INSTANCE.metodoslongos != null) {
 			refreshMarcadores(ProviderModel.INSTANCE.metodoslongos);
 			refreshView();
@@ -33,7 +30,7 @@ public class AtualizadorInformacoesMetodoLongo {
 		//refreshallProjects();
 	}
 
-	private void atulizarDadosProviderModel(AnalisadorProjeto analisadorProjeto) {
+	private static void atulizarDadosProviderModel(AnalisadorProjeto analisadorProjeto) {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		if (store.getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(
 				ValorMetodoLongoPreferencePage.OPCAOVALORLIMIAR)) {
@@ -46,13 +43,20 @@ public class AtualizadorInformacoesMetodoLongo {
 					ValorMetodoLongoPreferencePage.OPCAOPROJETOEXEMPLO)) {
 				ProviderModel.INSTANCE.dadosClasses = analisadorProjeto.getInfoMetodosPorProjetos(
 						Activator.projetos, true);
-				// TODO: Inserir Valores medianos e limiares nos componenetes arquiteturais
-				// TODO: Filtar pelos valores obtidos no projeto de exemplo 
+				GerenciadorComponenteArquitetural gca = new GerenciadorComponenteArquitetural();
+				if (ProviderModel.INSTANCE.dadosComponentesArquiteturais == null) {
+					ProviderModel.INSTANCE.dadosComponentesArquiteturais = 
+							gca.criarTabelaComponentesArquiteturais(store.
+									getString(PreferenceConstants.PROJETO_EXEMPLO));
+				}
+				ProviderModel.INSTANCE.metodoslongos = FiltrarMetodosLongos.filtrarPorProjetoExemmplo(
+						ProviderModel.INSTANCE.dadosClasses, 
+						ProviderModel.INSTANCE.dadosComponentesArquiteturais); 
 			}
 		}
 	}
 
-	public void refreshMarcadores(ArrayList<DadosMetodoLongo> metodosLongos) {
+	public static void refreshMarcadores(ArrayList<DadosMetodoLongo> metodosLongos) {
 		MarkerFactory marcador = new MarkerFactory();
 		marcador.deleteTodosMarcadores();
 		try {
@@ -62,7 +66,7 @@ public class AtualizadorInformacoesMetodoLongo {
 		}
 	}
 
-	public void refreshView() {
+	public static void refreshView() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();

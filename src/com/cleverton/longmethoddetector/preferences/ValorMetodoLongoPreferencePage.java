@@ -5,6 +5,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import com.cleverton.longmethoddetector.Activator;
+import com.cleverton.longmethoddetector.model.ProviderModel;
+import com.cleverton.longmethoddetector.negocio.AtualizadorInformacoesMetodoLongo;
 
 /**
  * This class represents a preference page that
@@ -26,12 +28,12 @@ implements IWorkbenchPreferencePage {
 	private DirectoryFieldEditor projetoExemploDirectory;
 	private RadioGroupFieldEditor escolhaRadioGroup;
 	private IntegerFieldEditor valorLimiarField;
-	
+
 	public static final String OPCAOPROJETOEXEMPLO = "projetoExemplo";
 	public static final String OPCAOVALORLIMIAR = "valorLimiar";
-	
+
 	private String[][] opcoesRadioGroup = {{ "Usar projeto como exemplo", OPCAOPROJETOEXEMPLO }, 
-		{"valor Limiar", OPCAOVALORLIMIAR }};
+			{"valor Limiar", OPCAOVALORLIMIAR }};
 
 	public ValorMetodoLongoPreferencePage() {
 		super(GRID);
@@ -48,17 +50,17 @@ implements IWorkbenchPreferencePage {
 		escolhaRadioGroup = new RadioGroupFieldEditor(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR,
 				"Escolha o tipo de valor a ser utilizado: ", 1, opcoesRadioGroup
 				, getFieldEditorParent(), true);
-		
+
 		projetoExemploDirectory = new DirectoryFieldEditor(PreferenceConstants.PROJETO_EXEMPLO, 
 				"Diretório do projeto: ", getFieldEditorParent());
 
 		valorLimiarField = new IntegerFieldEditor(PreferenceConstants.VALOR_LIMIAR, "Valor limiar:", 
 				getFieldEditorParent());
-		
+
 		addField(escolhaRadioGroup);
 		addField(projetoExemploDirectory);
 		addField(valorLimiarField);
-		
+
 		changeFieldsPorPreferences();
 	}
 
@@ -93,6 +95,13 @@ implements IWorkbenchPreferencePage {
 		changeFieldsPorPreferences();
 	}
 	
+	@Override
+	public void dispose() {
+		super.dispose();
+		ProviderModel.INSTANCE.dadosComponentesArquiteturais = null;
+		AtualizadorInformacoesMetodoLongo.refreshAll();
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */

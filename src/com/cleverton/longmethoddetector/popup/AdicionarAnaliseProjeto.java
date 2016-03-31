@@ -23,8 +23,7 @@ public class AdicionarAnaliseProjeto implements IEditorActionDelegate {
 	@Override
 	public void run(IAction action) {
 		GerenciadorProjeto.addProjectAnalysis();
-		AtualizadorInformacoesMetodoLongo atualizador = new AtualizadorInformacoesMetodoLongo();
-		atualizador.refreshAll();
+		AtualizadorInformacoesMetodoLongo.refreshAll();
 		MessageDialog dialog = new MessageDialog(null, "Long Method Detector", null, 
 				"Projeto Adicionado Para Analise", 
 				MessageDialog.INFORMATION, new String[] {"OK"}, 0);

@@ -1,11 +1,13 @@
 package com.cleverton.longmethoddetector.negocio;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.cleverton.longmethoddetector.Activator;
 import com.cleverton.longmethoddetector.model.DadosClasse;
+import com.cleverton.longmethoddetector.model.DadosComponentesArquiteturais;
 import com.cleverton.longmethoddetector.model.DadosMetodo;
 import com.cleverton.longmethoddetector.model.DadosMetodoLongo;
 import com.cleverton.longmethoddetector.preferences.PreferenceConstants;
@@ -37,6 +39,13 @@ public class FiltrarMetodosLongos {
 		return listaMetodosLongos;
 	}
 	
-	// TODO: Filtrar os métodos longos de acordo com a analise realizada no projeto de exemplo
+	public static ArrayList<DadosMetodoLongo> filtrarPorProjetoExemmplo(
+			ArrayList<DadosClasse> dadosClasse, LinkedList<DadosComponentesArquiteturais> dca) {
+		ArrayList<DadosMetodoLongo> listaMetodosLongos = new ArrayList<>();
+		/*for (DadosClasse classe : dadosClasse) {
+			// TODO: Implementar a filtragem dos métodos longos por projeto de exemplo
+		}*/
+		return listaMetodosLongos;
+	}
 	
 }

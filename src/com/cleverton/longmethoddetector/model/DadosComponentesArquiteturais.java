@@ -5,9 +5,9 @@ public class DadosComponentesArquiteturais {
 	private String extendsClass;
 	private String implementsArquitecture;
 	private String implementsAPIJava;
-	private Double mediana;
-	private Double primeiroQuartil;
-	private Double terceiroQuartil;
+	private int mediana;
+	private int primeiroQuartil;
+	private int terceiroQuartil;
 	
 	public String getExtendsClass() {
 		return extendsClass;
@@ -33,27 +33,27 @@ public class DadosComponentesArquiteturais {
 		this.implementsAPIJava = implementsAPIJava;
 	}
 	
-	public Double getMediana() {
+	public int getMediana() {
 		return mediana;
 	}
 	
-	public void setMediana(Double mediana) {
+	public void setMediana(int mediana) {
 		this.mediana = mediana;
 	}
 	
-	public Double getPrimeiroQuartil() {
+	public int getPrimeiroQuartil() {
 		return primeiroQuartil;
 	}
 	
-	public void setPrimeiroQuartil(Double primeiroQuartil) {
+	public void setPrimeiroQuartil(int primeiroQuartil) {
 		this.primeiroQuartil = primeiroQuartil;
 	}
 	
-	public Double getTerceiroQuartil() {
+	public int getTerceiroQuartil() {
 		return terceiroQuartil;
 	}
 	
-	public void setTerceiroQuartil(Double terceiroQuartil) {
+	public void setTerceiroQuartil(int terceiroQuartil) {
 		this.terceiroQuartil = terceiroQuartil;
 	}
 

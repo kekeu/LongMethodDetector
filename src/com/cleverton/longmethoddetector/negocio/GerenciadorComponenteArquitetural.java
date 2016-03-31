@@ -3,29 +3,14 @@ package com.cleverton.longmethoddetector.negocio;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.List; 
 
 import com.cleverton.longmethoddetector.model.DadosClasse;
 import com.cleverton.longmethoddetector.model.DadosComponentesArquiteturais;
+import com.cleverton.longmethoddetector.model.DadosMetodo;
 import com.cleverton.longmethoddetector.model.ProviderModel;
 
 public class GerenciadorComponenteArquitetural {
-
-	public static void main(String[] args) {
-		GerenciadorComponenteArquitetural analisadorProjeto = new GerenciadorComponenteArquitetural();
-		LinkedList<DadosComponentesArquiteturais> teste = 
-				analisadorProjeto.criarTabelaComponentesArquiteturais("C:\\runtime-EclipseApplication\\Projeto_P2");
-		System.out.println();
-		System.out.println("Tabela");
-		System.out.println("extendsClass | implementsArquitecture |  "
-				+ "implementsAPIJava   | Mediana |  PrimeiroQuartil   | TerceiroQuartil ");
-		System.out.println();
-		for (DadosComponentesArquiteturais dca : teste) {
-			System.out.println(dca.getExtendsClass()+" | " + dca.getImplementsArquitecture() + " | " + 
-					dca.getImplementsAPIJava() + "   | ------- | ------------- | ----------- ");
-		}
-		System.out.println();
-	}
 
 	public LinkedList<DadosComponentesArquiteturais> criarTabelaComponentesArquiteturais(
 			String projetoExemplo) {
@@ -33,7 +18,11 @@ public class GerenciadorComponenteArquitetural {
 		LinkedList<DadosComponentesArquiteturais> tabelaComponentes = new LinkedList<>();
 		for (List<DadosClasse> grupo : grupos) {
 			DadosComponentesArquiteturais dadosCA = new DadosComponentesArquiteturais();
-			// TODO: Obter valores da mediana e dos quartis 
+			ArrayList<Integer> listaNumLinhasOrdenada = MedianaQuartis.ordernarOrdemCrescente(
+					criarListaNumeroLinhasMetodosDoGrupo(grupo));
+			dadosCA.setMediana(MedianaQuartis.calcularMediana(listaNumLinhasOrdenada));
+			dadosCA.setPrimeiroQuartil(MedianaQuartis.primeiroQuartil(listaNumLinhasOrdenada));
+			dadosCA.setTerceiroQuartil(MedianaQuartis.terceiroQuartil(listaNumLinhasOrdenada));
 			if (grupoEhRegra1(grupo)) {
 				dadosCA.setExtendsClass(grupo.get(0).getClassesExtendsImplements().get(0));
 				dadosCA.setImplementsAPIJava(null);
@@ -63,6 +52,16 @@ public class GerenciadorComponenteArquitetural {
 		return tabelaComponentes;
 	}
 
+	private ArrayList<Integer> criarListaNumeroLinhasMetodosDoGrupo(List<DadosClasse> grupo) {
+		ArrayList<Integer> retorno = new ArrayList<>();
+		for (DadosClasse dadosClasse : grupo) {
+			for (DadosMetodo metodo : dadosClasse.getMetodos()) {
+				retorno.add(metodo.getNumeroLinhas());
+			}
+		}
+		return retorno;
+	}
+	
 	private boolean grupoEhRegra3(List<DadosClasse> grupo) {
 		if (grupo.size() > 1) {
 			if (temClasseImplementada(grupo.get(0)) && !implementaInterfaceDaArquitetura(grupo.get(0)) &&
@@ -103,14 +102,6 @@ public class GerenciadorComponenteArquitetural {
 			classificarClassesGrupos(classe, grupos);
 		}
 		formarGrupoClassesNaoClassificadas(grupos);
-		for (int i = 0; i < grupos.size(); i++) {
-			System.out.println("Grupo "+ (i+1));
-			for (int j = 0; j < grupos.get(i).size(); j++) {
-				System.out.print(grupos.get(i).get(j).getNomeClasse() +"  --  ");
-			}
-			System.out.println();
-			System.out.println();
-		}
 		return grupos;
 	}
 

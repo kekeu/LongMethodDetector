@@ -23,9 +23,8 @@ public class RemoverAnaliseProjeto implements IEditorActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		AtualizadorInformacoesMetodoLongo atualizador = new AtualizadorInformacoesMetodoLongo();
 		GerenciadorProjeto.removeProjectAnalysis();
-		atualizador.refreshAll();
+		AtualizadorInformacoesMetodoLongo.refreshAll();
 		MessageDialog dialog = new MessageDialog(null, "Long Method Detector", null, 
 				"Projeto Removido da Analise", 
 				MessageDialog.INFORMATION, new String[] {"OK"}, 0);

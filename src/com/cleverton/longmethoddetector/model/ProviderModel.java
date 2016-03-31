@@ -1,6 +1,7 @@
 package com.cleverton.longmethoddetector.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public enum ProviderModel {
 
@@ -9,6 +10,7 @@ public enum ProviderModel {
 	public ArrayList<DadosClasse> dadosClasses;
 	public ArrayList<DadosMetodoLongo> metodoslongos;
 	private ArrayList<String> interfacesAPI;
+	public LinkedList<DadosComponentesArquiteturais> dadosComponentesArquiteturais;
 	
 	public ArrayList<String> getInterfacesAPI() {
 		if (interfacesAPI == null) {
