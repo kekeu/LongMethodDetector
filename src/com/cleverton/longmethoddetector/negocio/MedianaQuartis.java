@@ -52,4 +52,11 @@ public class MedianaQuartis {
 		}
 		return false;
 	}
+	
+	public static boolean eMaiorQueTerceiroQuartil(int numero, int terceiroQuartil) {
+		if (numero > terceiroQuartil) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -32,11 +32,12 @@ public class AtualizadorInformacoesMetodoLongo {
 
 	private static void atulizarDadosProviderModel(AnalisadorProjeto analisadorProjeto) {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		FiltrarMetodosLongos filtrarMetodos = new FiltrarMetodosLongos();
 		if (store.getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(
 				ValorMetodoLongoPreferencePage.OPCAOVALORLIMIAR)) {
 			ProviderModel.INSTANCE.dadosClasses = analisadorProjeto.getInfoMetodosPorProjetos(
 					Activator.projetos, false);
-			ProviderModel.INSTANCE.metodoslongos = FiltrarMetodosLongos.filtrarPorValorLimiar(
+			ProviderModel.INSTANCE.metodoslongos = filtrarMetodos.filtrarPorValorLimiar(
 					ProviderModel.INSTANCE.dadosClasses);
 		} else {
 			if (store.getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(
@@ -49,7 +50,7 @@ public class AtualizadorInformacoesMetodoLongo {
 							gca.criarTabelaComponentesArquiteturais(store.
 									getString(PreferenceConstants.PROJETO_EXEMPLO));
 				}
-				ProviderModel.INSTANCE.metodoslongos = FiltrarMetodosLongos.filtrarPorProjetoExemmplo(
+				ProviderModel.INSTANCE.metodoslongos = filtrarMetodos.filtrarPorProjetoExemmplo(
 						ProviderModel.INSTANCE.dadosClasses, 
 						ProviderModel.INSTANCE.dadosComponentesArquiteturais); 
 			}

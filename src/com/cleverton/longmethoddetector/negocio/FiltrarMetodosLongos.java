@@ -14,7 +14,7 @@ import com.cleverton.longmethoddetector.preferences.PreferenceConstants;
 
 public class FiltrarMetodosLongos {
 
-	public static ArrayList<DadosMetodoLongo> filtrarPorValorLimiar(
+	public ArrayList<DadosMetodoLongo> filtrarPorValorLimiar(
 			ArrayList<DadosClasse> dadosClasse) {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		int valorLimiar = Integer.parseInt(store.getString(PreferenceConstants.VALOR_LIMIAR));
@@ -39,13 +39,92 @@ public class FiltrarMetodosLongos {
 		return listaMetodosLongos;
 	}
 	
-	public static ArrayList<DadosMetodoLongo> filtrarPorProjetoExemmplo(
+	public ArrayList<DadosMetodoLongo> filtrarPorProjetoExemmplo(
 			ArrayList<DadosClasse> dadosClasse, LinkedList<DadosComponentesArquiteturais> dca) {
-		ArrayList<DadosMetodoLongo> listaMetodosLongos = new ArrayList<>();
-		/*for (DadosClasse classe : dadosClasse) {
-			// TODO: Implementar a filtragem dos métodos longos por projeto de exemplo
-		}*/
-		return listaMetodosLongos;
+		GerenciadorComponenteArquitetural gca = new GerenciadorComponenteArquitetural();
+		ArrayList<DadosMetodoLongo> metodosLongos = new ArrayList<>();
+		for (DadosClasse classe : dadosClasse) {
+			boolean analisarProximaRegra = true;
+			if (analisarProximaRegra && classe.getClassesExtendsImplements().get(0) != null) {
+				analisarProximaRegra = estendeMesmaClasseComponente(classe, metodosLongos, dca);
+			}
+			if (analisarProximaRegra && gca.temClasseImplementada(classe) && 
+					gca.implementaInterfaceDaArquitetura(classe)) {
+				analisarProximaRegra = implementaMesmaClasseArquiteturalComponente(classe, metodosLongos, dca);
+			}
+			if (analisarProximaRegra && gca.temClasseImplementada(classe) && 
+					!gca.implementaInterfaceDaArquitetura(classe)) {
+				analisarProximaRegra = implementaMesmaClasseAPIComponente(classe, metodosLongos, dca);
+			}
+			if (analisarProximaRegra) {
+				arquiteturaNaoClassificada(classe, metodosLongos, dca);
+			}
+		}
+		return metodosLongos;
+	}
+
+	private void arquiteturaNaoClassificada(DadosClasse classe, ArrayList<DadosMetodoLongo> metodosLongos,
+			LinkedList<DadosComponentesArquiteturais> dca) {
+		for (DadosComponentesArquiteturais componente : dca) {
+			if (componente.getExtendsClass() == null && componente.getImplementsArquitecture() == null &&
+					componente.getImplementsAPIJava() == null) {
+				selecionarMetodos(classe, metodosLongos, componente);
+			}
+		}
+	}
+
+	private boolean implementaMesmaClasseAPIComponente(DadosClasse classe,
+			ArrayList<DadosMetodoLongo> metodosLongos, LinkedList<DadosComponentesArquiteturais> dca) {
+		for (DadosComponentesArquiteturais componente : dca) {
+			for (int i = 1; i < classe.getClassesExtendsImplements().size(); i++) {
+				if (componente.getImplementsAPIJava().equals(classe.getClassesExtendsImplements().get(i))) {
+					selecionarMetodos(classe, metodosLongos, componente);
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
+	private boolean implementaMesmaClasseArquiteturalComponente(DadosClasse classe,
+			ArrayList<DadosMetodoLongo> metodosLongos, LinkedList<DadosComponentesArquiteturais> dca) {
+		for (DadosComponentesArquiteturais componente : dca) {
+			for (int i = 1; i < classe.getClassesExtendsImplements().size(); i++) {
+				if (componente.getImplementsArquitecture().equals(classe.getClassesExtendsImplements().get(i))) {
+					selecionarMetodos(classe, metodosLongos, componente);
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean estendeMesmaClasseComponente(DadosClasse classe, 
+			ArrayList<DadosMetodoLongo> metodosLongos, LinkedList<DadosComponentesArquiteturais> dca) {
+		for (DadosComponentesArquiteturais componente : dca) {
+			if (classe.getClassesExtendsImplements().get(0).equals(componente.getExtendsClass())) {
+				selecionarMetodos(classe, metodosLongos, componente);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private void selecionarMetodos(DadosClasse classe, ArrayList<DadosMetodoLongo> metodosLongos,
+			DadosComponentesArquiteturais componente) {
+		for (DadosMetodo metodo : classe.getMetodos()) {
+			if (MedianaQuartis.eMaiorQueTerceiroQuartil(metodo.getNumeroLinhas(), 
+					componente.getTerceiroQuartil())) {
+				DadosMetodoLongo dadosML = new DadosMetodoLongo();
+				dadosML.setCharFinal(metodo.getCharFinal());
+				dadosML.setCharInicial(metodo.getCharInicial());
+				dadosML.setDiretorioDaClasse(classe.getDiretorioDaClasse());
+				dadosML.setLinhaInicial(metodo.getLinhaInicial());
+				dadosML.setNomeClasse(classe.getNomeClasse());
+				dadosML.setNomeMetodo(metodo.getNomeMetodo());
+				dadosML.setNumeroLinhas(metodo.getNumeroLinhas());
+				metodosLongos.add(dadosML);
+			}
+		}
+	}
 }
