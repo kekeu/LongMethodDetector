@@ -6,12 +6,7 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.texteditor.ITextEditor;
 import org.osgi.framework.BundleContext;
 
 import com.cleverton.longmethoddetector.negocio.AtualizadorInformacoesMetodoLongo;
@@ -28,6 +23,7 @@ public class Activator extends AbstractUIPlugin {
 	public static ArrayList<String> projetos;
 	// The shared instance
 	private static Activator plugin;
+	private static IResourceChangeListener listener;
 
 	/**
 	 * The constructor
@@ -43,10 +39,9 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		projetos = CarregaSalvaArquivo.carregarProjetos();
-		new AtualizadorInformacoesMetodoLongo().refreshAll();
-		/*IResourceChangeListener listener = new ResourceChangeReporter();
-		   ResourcesPlugin.getWorkspace().addResourceChangeListener(listener,
-		      IResourceChangeEvent.PRE_CLOSE);*/
+		AtualizadorInformacoesMetodoLongo.refreshAll();
+		listener = new ResourceChangeReporter();
+		adicionarEscutaAlteracaoDiretorio();
 	}
 
 	/*
@@ -56,6 +51,7 @@ public class Activator extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		CarregaSalvaArquivo.salvaArquivo(projetos);
+		removerEscutaAlteracaoDiretorio();
 		super.stop(context);
 	}
 
@@ -78,22 +74,13 @@ public class Activator extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
-
-	public static IWorkbenchWindow getActiveWorkbenchWindow() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-	}
-
-	public static IWorkbenchPage getActiveWorkbenchPage() {
-		return getActiveWorkbenchWindow().getActivePage();
+	
+	public static void adicionarEscutaAlteracaoDiretorio() {
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener,
+				IResourceChangeEvent.POST_BUILD);
 	}
 	
-	/**
-	 * Always good to have this static method as when dealing with IResources
-	 * having a interface to get the editor is very handy
-	 * @return
-	 * @throws PartInitException 
-	 */
-	public static ITextEditor getActiveEditor() throws PartInitException {
-		return (ITextEditor) getActiveWorkbenchPage().getActiveEditor();
+	public static void removerEscutaAlteracaoDiretorio() {
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(listener);
 	}
 }

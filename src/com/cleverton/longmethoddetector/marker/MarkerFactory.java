@@ -14,6 +14,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -37,7 +39,7 @@ public class MarkerFactory {
 		marker = resource.createMarker(ID_MARCADOR);
 		marker.setAttribute(IMarker.MESSAGE, "Esse é um método longo com " + 
 				informacoes.getNumeroLinhas() + " linhas. \nÉ recomendável realizar refatoração para"
-						+ " diminuir o seu tamanho.");
+				+ " diminuir o seu tamanho.");
 		//compute and set char start and char end
 		marker.setAttribute(IMarker.CHAR_START, informacoes.getCharInicial());
 		marker.setAttribute(IMarker.CHAR_END, informacoes.getCharFinal());
@@ -74,21 +76,37 @@ public class MarkerFactory {
 		}
 	}
 
-	public void adicionarMarcadoresMetodosLongos(ArrayList<DadosMetodoLongo> metodosLongos) throws CoreException {
-		ITextEditor editor = (ITextEditor) Activator.getActiveWorkbenchPage().getActiveEditor();
-		for (DadosMetodoLongo metodoLongo : metodosLongos) {
-			String localWorkspace = alterarDireotioAbsolutoPorWorkspace(
-					metodoLongo.getDiretorioDaClasse());
-			IFile file = ResourcesPlugin.getWorkspace().getRoot()
-					.getFile(new Path(localWorkspace));
-			if (editor == null) {
-				editor = (ITextEditor)IDE.openEditor(Activator.getActiveWorkbenchPage(), file);
+	public void adicionarMarcadoresMetodosLongos(ArrayList<DadosMetodoLongo> metodosLongos) {
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				ITextEditor editor = null;
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (window != null) {
+					IWorkbenchPage page = window.getActivePage();
+					if (page != null) {
+						editor = (ITextEditor) page.getActiveEditor();
+						for (DadosMetodoLongo metodoLongo : metodosLongos) {
+							String localWorkspace = alterarDireotioAbsolutoPorWorkspace(
+									metodoLongo.getDiretorioDaClasse());
+							IFile file = ResourcesPlugin.getWorkspace().getRoot()
+									.getFile(new Path(localWorkspace));
+							try {
+								if (editor == null) {
+									editor = (ITextEditor)IDE.openEditor(page, file);
+								}
+								IMarker marker = null;
+								marker = criarMarcador(file, metodoLongo);
+								if (!marker.exists()) {
+									adicionarAnnotation(marker, metodoLongo, editor);
+								}
+							} catch (CoreException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
 			}
-			IMarker marker = criarMarcador(file, metodoLongo);
-			if (!marker.exists()) {
-				adicionarAnnotation(marker, metodoLongo, editor);
-			}
-		}
+		});
 	}
 
 	public void deleteTodosMarcadores() {

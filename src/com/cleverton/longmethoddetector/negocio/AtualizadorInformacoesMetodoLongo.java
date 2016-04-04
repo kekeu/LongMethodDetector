@@ -2,7 +2,6 @@ package com.cleverton.longmethoddetector.negocio;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -24,8 +23,8 @@ public class AtualizadorInformacoesMetodoLongo {
 		GerenciadorProjeto.validaProjetosAtivos(Activator.projetos);
 		atulizarDadosProviderModel(analisadorProjeto);
 		if (ProviderModel.INSTANCE.metodoslongos != null) {
-			refreshMarcadores(ProviderModel.INSTANCE.metodoslongos);
 			refreshView();
+			refreshMarcadores(ProviderModel.INSTANCE.metodoslongos);
 		}
 		//refreshallProjects();
 	}
@@ -60,26 +59,27 @@ public class AtualizadorInformacoesMetodoLongo {
 	public static void refreshMarcadores(ArrayList<DadosMetodoLongo> metodosLongos) {
 		MarkerFactory marcador = new MarkerFactory();
 		marcador.deleteTodosMarcadores();
-		try {
-			marcador.adicionarMarcadoresMetodosLongos(metodosLongos);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
+		marcador.adicionarMarcadoresMetodosLongos(metodosLongos);
 	}
 
 	public static void refreshView() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window != null) {
-			IWorkbenchPage page = window.getActivePage();
-			try {
-				if (page != null && page.findView(MetodoLongoView.ID) != null) {
-					page.hideView(page.findView(MetodoLongoView.ID));
-					page.showView(MetodoLongoView.ID);
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (window != null) {
+					IWorkbenchPage page = window.getActivePage();
+					try {
+						if (page != null && page.findView(MetodoLongoView.ID) != null) {
+							page.hideView(page.findView(MetodoLongoView.ID));
+							page.showView(MetodoLongoView.ID);
+							page.activate(page.getActiveEditor());
+						}
+					} catch (PartInitException e) {
+						e.printStackTrace();
+					}
 				}
-			} catch (PartInitException e) {
-				e.printStackTrace();
 			}
-		} 
+		}); 
 	} 
 
 	/*public static void refreshProjetc(String project) {

@@ -1,7 +1,6 @@
 package com.cleverton.longmethoddetector.marker;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -12,7 +11,7 @@ import com.cleverton.longmethoddetector.negocio.GerenciadorProjeto;
 
 public class FileDecorator extends LabelProvider implements ILightweightLabelDecorator {
 
-	public static final String ICON = "/icons/sample.gif";
+	//public static final String ICON = "/icons/find_menor.png";
 	private static Font font = new Font(null, "Arial", 10, 0);
 	private static Color color = new Color(null, 153, 255, 153);
 
@@ -22,7 +21,7 @@ public class FileDecorator extends LabelProvider implements ILightweightLabelDec
 		{
 			if (GerenciadorProjeto.projetoEstaNaAnalise(((IResource)resource).getProject()
 					.getLocation().toString())) {
-				decoration.addOverlay(ImageDescriptor.createFromFile(FileDecorator.class, ICON));
+				//decoration.addOverlay(ImageDescriptor.createFromFile(FileDecorator.class, ICON));
 				decoration.addSuffix(" Projeto Em Análise - MLD");
 				decoration.setFont(font);
 				decoration.setForegroundColor(color);
@@ -35,7 +34,7 @@ public class FileDecorator extends LabelProvider implements ILightweightLabelDec
 		}
 		int markers = MarkerFactory.findMarkers((IResource) resource).size();
 		if (markers > 0) {
-			decoration.addOverlay(ImageDescriptor.createFromFile(FileDecorator.class, ICON));
+			//decoration.addOverlay(ImageDescriptor.createFromFile(FileDecorator.class, ICON));
 			//decoration.addPrefix("<T> ");
 			decoration.addSuffix(" " + markers + " Método(s) Longo(s)");
 			decoration.setFont(font);

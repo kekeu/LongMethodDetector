@@ -23,10 +23,10 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ViewPart;
 
-import com.cleverton.longmethoddetector.Activator;
 import com.cleverton.longmethoddetector.marker.MarkerFactory;
 import com.cleverton.longmethoddetector.model.DadosMetodoLongo;
 import com.cleverton.longmethoddetector.model.ProviderModel;
@@ -66,13 +66,19 @@ public class MetodoLongoView extends ViewPart {
 						linha.getDiretorioDaClasse());
 				IFile file = ResourcesPlugin.getWorkspace().getRoot()
 						.getFile(new Path(localWorkspace));
-				IWorkbenchPage page = Activator.getActiveWorkbenchPage();
-				try {
-					IMarker marker = MarkerFactory.marcadorOpenEditor(file, linha.getLinhaInicial());
-					IDE.openEditor(page, marker);
-					marker.delete();
-				} catch (CoreException e) {
-					e.printStackTrace();
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage();
+				if (page != null) {
+					try {
+						IMarker marker = MarkerFactory.marcadorOpenEditor(file, linha.getLinhaInicial());
+						IDE.openEditor(page, marker);
+						marker.delete();
+					} catch (CoreException e) {
+						e.printStackTrace();
+					}
+				} else {
+					System.out.println("Não foi possível abrir a classe. "
+							+ "Erro ao tentar obter o ActiveWorkbenchPage");
 				}
 			}
 		});

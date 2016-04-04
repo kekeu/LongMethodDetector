@@ -10,7 +10,7 @@
       </category>
       <view
             name="View Métodos Longos"
-            icon="icons/sample.gif"
+            icon="icons/find.png"
             category="com.cleverton.longmethoddetector"
             class="com.cleverton.longmethoddetector.views.MetodoLongoView"
             id="com.cleverton.longmethoddetector.views.MetodoLongoView">
@@ -85,7 +85,7 @@
   		id="myannotationspecification">
      	<specification
         	annotationType="com.cleverton.longmethoddetector.myannotation"
-        	icon="icons/sample.gif"
+        	icon="icons/find.png"
         	overviewRulerPreferenceKey="markerOverview"
         	overviewRulerPreferenceValue="true"
         	colorPreferenceKey="markerColor"
