@@ -15,6 +15,7 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
 
 import com.cleverton.longmethoddetector.Activator;
+import com.cleverton.longmethoddetector.marker.MarkerFactory;
 
 public class GerenciadorProjeto {
 
@@ -91,6 +92,7 @@ public class GerenciadorProjeto {
 				}
 			}
 			Activator.projetos = projetos;
+			new MarkerFactory().deleteMarcadorPorProjeto(projetoSelecionado);
 			AtualizadorInformacoesMetodoLongo.refreshAll();
 			dialog = new MessageDialog(null, "Long Method Detector", null, 
 					"Projeto Removido da Analise", 
