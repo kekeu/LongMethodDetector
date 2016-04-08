@@ -31,6 +31,8 @@ public class AnalisadorProjeto {
 	}
 
 	public ArrayList<String> getArquivosPorProjeto(String nomeDiretorio){
+		//System.out.println();
+		//System.out.println();
 		ArrayList<String> retorno = new ArrayList<>();
 		ArrayList<File> listaArquivos = new ArrayList<>();
 		File directory = new File(nomeDiretorio);
@@ -46,6 +48,7 @@ public class AnalisadorProjeto {
 							listaArquivos.add(fList[j]);
 						} else {
 							if (fList[j].getPath().endsWith(".java")) {
+								//System.out.println(fList[j].getAbsolutePath());
 								retorno.add(fList[j].getAbsolutePath());
 							}
 						}
@@ -53,6 +56,8 @@ public class AnalisadorProjeto {
 				}
 			}
 		}
+		//System.out.println();
+		//System.out.println();
 		return retorno;
 	}
 

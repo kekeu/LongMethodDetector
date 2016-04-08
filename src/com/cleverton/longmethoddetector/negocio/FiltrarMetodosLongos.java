@@ -77,7 +77,7 @@ public class FiltrarMetodosLongos {
 			ArrayList<DadosMetodoLongo> metodosLongos, LinkedList<DadosComponentesArquiteturais> dca) {
 		for (DadosComponentesArquiteturais componente : dca) {
 			for (int i = 1; i < classe.getClassesExtendsImplements().size(); i++) {
-				if (componente.getImplementsAPIJava().equals(classe.getClassesExtendsImplements().get(i))) {
+				if (classe.getClassesExtendsImplements().get(i).equals(componente.getImplementsAPIJava())) {
 					selecionarMetodos(classe, metodosLongos, componente);
 					return false;
 				}
@@ -90,7 +90,7 @@ public class FiltrarMetodosLongos {
 			ArrayList<DadosMetodoLongo> metodosLongos, LinkedList<DadosComponentesArquiteturais> dca) {
 		for (DadosComponentesArquiteturais componente : dca) {
 			for (int i = 1; i < classe.getClassesExtendsImplements().size(); i++) {
-				if (componente.getImplementsArquitecture().equals(classe.getClassesExtendsImplements().get(i))) {
+				if (classe.getClassesExtendsImplements().get(i).equals(componente.getImplementsArquitecture())) {
 					selecionarMetodos(classe, metodosLongos, componente);
 					return false;
 				}

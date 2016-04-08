@@ -49,6 +49,15 @@ public class GerenciadorComponenteArquitetural {
 			}
 			tabelaComponentes.add(dadosCA);
 		}
+		/*for (DadosComponentesArquiteturais dca : tabelaComponentes) {
+			System.out.print("Classe extendinda: "+dca.getExtendsClass());
+			System.out.print("   --  Implements API: "+dca.getImplementsAPIJava());
+			System.out.print("   --  Implements Arquitetura: "+dca.getImplementsArquitecture());
+			System.out.print("   --  Mediana: " + dca.getMediana() + "   --  1º Quartil: " + 
+					dca.getPrimeiroQuartil() + "   --  3º Quartil: " +dca.getTerceiroQuartil());
+			System.out.println();
+			System.out.println();
+		}*/
 		return tabelaComponentes;
 	}
 
