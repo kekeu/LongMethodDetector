@@ -222,4 +222,17 @@ public class GerenciadorComponenteArquitetural {
 		return null;
 	}
 	
+	public static String getClasseComponente(DadosComponentesArquiteturais componente) {
+		if (componente.getExtendsClass() != null) {
+			return componente.getExtendsClass();
+		}
+		if (componente.getImplementsAPIJava() != null) {
+			return componente.getImplementsAPIJava();
+		}
+		if (componente.getImplementsArquitecture() != null) {
+			return componente.getImplementsArquitecture();
+		}
+		return "Não Classificado";
+	}
+	
 }

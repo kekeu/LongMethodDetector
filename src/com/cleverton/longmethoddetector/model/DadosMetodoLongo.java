@@ -9,7 +9,16 @@ public class DadosMetodoLongo {
 	private int numeroLinhas;
 	private int charInicial;
 	private int charFinal;
+	private String mensagem;
 	
+	public String getMensagem() {
+		return mensagem;
+	}
+
+	public void setMensagem(String mensagem) {
+		this.mensagem = mensagem;
+	}
+
 	public String getDiretorioDaClasse() {
 		return diretorioDaClasse;
 	}

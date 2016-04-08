@@ -37,9 +37,7 @@ public class MarkerFactory {
 		IMarker marker = null;
 		//note: you use the id that is defined in your plugin.xml
 		marker = resource.createMarker(ID_MARCADOR);
-		marker.setAttribute(IMarker.MESSAGE, "Esse é um método longo com " + 
-				informacoes.getNumeroLinhas() + " linhas. \nÉ recomendável realizar refatoração para"
-				+ " diminuir o seu tamanho.");
+		marker.setAttribute(IMarker.MESSAGE, informacoes.getMensagem());
 		//compute and set char start and char end
 		marker.setAttribute(IMarker.CHAR_START, informacoes.getCharInicial());
 		marker.setAttribute(IMarker.CHAR_END, informacoes.getCharFinal());
