@@ -22,10 +22,11 @@ public class AtualizadorInformacoesMetodoLongo {
 		AnalisadorProjeto analisadorProjeto = new AnalisadorProjeto();
 		GerenciadorProjeto.validaProjetosAtivos(Activator.projetos);
 		atulizarDadosProviderModel(analisadorProjeto);
-		if (ProviderModel.INSTANCE.metodoslongos != null) {
-			refreshView();
-			refreshMarcadores(ProviderModel.INSTANCE.metodoslongos);
+		if (ProviderModel.INSTANCE.metodoslongos == null) {
+			ProviderModel.INSTANCE.metodoslongos = new ArrayList<>();
 		}
+		refreshView();
+		refreshMarcadores(ProviderModel.INSTANCE.metodoslongos);
 		//refreshallProjects();
 	}
 
