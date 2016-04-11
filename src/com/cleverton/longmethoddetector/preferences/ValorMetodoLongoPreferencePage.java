@@ -127,7 +127,7 @@ implements IWorkbenchPreferencePage {
 				(porcentagemProjetoExemploField.getIntValue() < 1 || 
 				porcentagemProjetoExemploField.getIntValue() > 100)) {
 			dialog = new MessageDialog(null, "Preferences Page", null, 
-					"Selecione um valor de porcentagem entre 1% e 99%.", 
+					"Selecione um valor de porcentagem entre 1% e 100%.", 
 					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
 			dialog.open();
 			return false;
@@ -151,7 +151,7 @@ implements IWorkbenchPreferencePage {
 				(porcentagemProjetoExemploField.getIntValue() < 1 || 
 				porcentagemProjetoExemploField.getIntValue() > 100)) {
 			dialog = new MessageDialog(null, "Preferences Page", null, 
-					"Selecione um valor de porcentagem entre 1% e 99%.", 
+					"Selecione um valor de porcentagem entre 1% e 100%.", 
 					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
 			dialog.open();
 			return;
