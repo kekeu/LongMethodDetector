@@ -45,9 +45,9 @@ public class AtualizadorInformacoesMetodoLongo {
 						Activator.projetos, true);
 				GerenciadorComponenteArquitetural gca = new GerenciadorComponenteArquitetural();
 				if (ProviderModel.INSTANCE.dadosComponentesArquiteturais == null) {
-					ProviderModel.INSTANCE.dadosComponentesArquiteturais = 
-							gca.criarTabelaComponentesArquiteturais(store.
-									getString(PreferenceConstants.PROJETO_EXEMPLO));
+					ProviderModel.INSTANCE.dadosComponentesArquiteturais = gca.criarTabelaCompArquiteturais(
+							store.getString(PreferenceConstants.PROJETO_EXEMPLO), 
+							store.getInt(PreferenceConstants.PORCENTAGEM_PROJETO_EXEMPLO));
 				}
 				ProviderModel.INSTANCE.metodoslongos = filtrarMetodos.filtrarPorProjetoExemmplo(
 						ProviderModel.INSTANCE.dadosClasses, 

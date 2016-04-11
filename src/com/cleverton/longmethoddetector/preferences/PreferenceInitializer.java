@@ -19,6 +19,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR, "valorLimiar");
 		store.setDefault(PreferenceConstants.VALOR_LIMIAR, 10);
+		store.setDefault(PreferenceConstants.PORCENTAGEM_PROJETO_EXEMPLO, 75);
 	}
 
 }

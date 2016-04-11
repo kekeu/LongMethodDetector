@@ -1,5 +1,6 @@
 package com.cleverton.longmethoddetector.preferences;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -28,6 +29,7 @@ implements IWorkbenchPreferencePage {
 	private DirectoryFieldEditor projetoExemploDirectory;
 	private RadioGroupFieldEditor escolhaRadioGroup;
 	private IntegerFieldEditor valorLimiarField;
+	private IntegerFieldEditor porcentagemProjetoExemploField;
 
 	public static final String OPCAOPROJETOEXEMPLO = "projetoExemplo";
 	public static final String OPCAOVALORLIMIAR = "valorLimiar";
@@ -54,11 +56,17 @@ implements IWorkbenchPreferencePage {
 		projetoExemploDirectory = new DirectoryFieldEditor(PreferenceConstants.PROJETO_EXEMPLO, 
 				"Diretório do projeto: ", getFieldEditorParent());
 
+		porcentagemProjetoExemploField = new IntegerFieldEditor(PreferenceConstants
+				.PORCENTAGEM_PROJETO_EXEMPLO, "Porcentagem de métodos compreendidos "
+						+ "nos \nvalor limiar dos componentes arquiteturais:", 
+						getFieldEditorParent());
+
 		valorLimiarField = new IntegerFieldEditor(PreferenceConstants.VALOR_LIMIAR, "Valor limiar:", 
 				getFieldEditorParent());
 
 		addField(escolhaRadioGroup);
 		addField(projetoExemploDirectory);
+		addField(porcentagemProjetoExemploField);
 		addField(valorLimiarField);
 
 		changeFieldsPorPreferences();
@@ -67,11 +75,9 @@ implements IWorkbenchPreferencePage {
 	public void changeFieldsPorPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		if (store.getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(OPCAOPROJETOEXEMPLO)) {
-			projetoExemploDirectory.setEnabled(true, getFieldEditorParent());
-			valorLimiarField.setEnabled(false, getFieldEditorParent());
+			habilitarCamposProjetoExemplo();
 		} else {
-			projetoExemploDirectory.setEnabled(false, getFieldEditorParent());
-			valorLimiarField.setEnabled(true, getFieldEditorParent());
+			habilitarCamposValorLimiar();
 		}
 	}
 
@@ -80,21 +86,79 @@ implements IWorkbenchPreferencePage {
 		super.propertyChange(event);
 		if (event.getSource() == escolhaRadioGroup) {
 			if (event.getNewValue().toString().equals(OPCAOPROJETOEXEMPLO)) {
-				projetoExemploDirectory.setEnabled(true, getFieldEditorParent());
-				valorLimiarField.setEnabled(false, getFieldEditorParent());
+				habilitarCamposProjetoExemplo();
 			} else {
-				projetoExemploDirectory.setEnabled(false, getFieldEditorParent());
-				valorLimiarField.setEnabled(true, getFieldEditorParent());
+				habilitarCamposValorLimiar();
 			}
 		}
+	}
+
+	private void habilitarCamposProjetoExemplo() {
+		projetoExemploDirectory.setEnabled(true, getFieldEditorParent());
+		valorLimiarField.setEnabled(false, getFieldEditorParent());
+		porcentagemProjetoExemploField.setEnabled(true, getFieldEditorParent());
+	}
+
+	private void habilitarCamposValorLimiar() {
+		projetoExemploDirectory.setEnabled(false, getFieldEditorParent());
+		valorLimiarField.setEnabled(true, getFieldEditorParent());
+		porcentagemProjetoExemploField.setEnabled(false, getFieldEditorParent());
 	}
 
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();
-		changeFieldsPorPreferences();
+		habilitarCamposValorLimiar();
 	}
-	
+
+	@Override
+	public boolean performOk() {
+		MessageDialog dialog = null;
+		if (projetoExemploDirectory.getLabelControl(getFieldEditorParent()).getEnabled() &&
+				(projetoExemploDirectory.getStringValue() == null || 
+				projetoExemploDirectory.getStringValue().equals(""))) {
+			dialog = new MessageDialog(null, "Preferences Page", null, 
+					"Selecione um projeto para ser usado na analise como Projeto de Exemplo.", 
+					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
+			dialog.open();
+			return false;
+		}
+		if (porcentagemProjetoExemploField.getLabelControl(getFieldEditorParent()).getEnabled() &&
+				(porcentagemProjetoExemploField.getIntValue() < 1 || 
+				porcentagemProjetoExemploField.getIntValue() > 100)) {
+			dialog = new MessageDialog(null, "Preferences Page", null, 
+					"Selecione um valor de porcentagem entre 1% e 99%.", 
+					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
+			dialog.open();
+			return false;
+		}
+		return super.performOk();
+	}
+
+	@Override
+	protected void performApply() {
+		MessageDialog dialog = null;
+		if (projetoExemploDirectory.getLabelControl(getFieldEditorParent()).getEnabled() &&
+				(projetoExemploDirectory.getStringValue() == null || 
+				projetoExemploDirectory.getStringValue().equals(""))) {
+			dialog = new MessageDialog(null, "Preferences Page", null, 
+					"Selecione um projeto para ser usado na analise como Projeto de Exemplo.", 
+					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
+			dialog.open();
+			return;
+		}
+		if (porcentagemProjetoExemploField.getLabelControl(getFieldEditorParent()).getEnabled() &&
+				(porcentagemProjetoExemploField.getIntValue() < 1 || 
+				porcentagemProjetoExemploField.getIntValue() > 100)) {
+			dialog = new MessageDialog(null, "Preferences Page", null, 
+					"Selecione um valor de porcentagem entre 1% e 99%.", 
+					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
+			dialog.open();
+			return;
+		}
+		super.performApply();
+	}
+
 	@Override
 	public void dispose() {
 		super.dispose();

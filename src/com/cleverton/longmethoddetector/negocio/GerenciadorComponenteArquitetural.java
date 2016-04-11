@@ -12,8 +12,8 @@ import com.cleverton.longmethoddetector.model.ProviderModel;
 
 public class GerenciadorComponenteArquitetural {
 
-	public LinkedList<DadosComponentesArquiteturais> criarTabelaComponentesArquiteturais(
-			String projetoExemplo) {
+	public LinkedList<DadosComponentesArquiteturais> criarTabelaCompArquiteturais(
+			String projetoExemplo, int porcentagemLimiar) {
 		LinkedList<List<DadosClasse>> grupos = criarGruposComponentesArquiteturais(projetoExemplo);
 		LinkedList<DadosComponentesArquiteturais> tabelaComponentes = new LinkedList<>();
 		for (List<DadosClasse> grupo : grupos) {
@@ -21,8 +21,9 @@ public class GerenciadorComponenteArquitetural {
 			ArrayList<Integer> listaNumLinhasOrdenada = MedianaQuartis.ordernarOrdemCrescente(
 					criarListaNumeroLinhasMetodosDoGrupo(grupo));
 			dadosCA.setMediana(MedianaQuartis.calcularMediana(listaNumLinhasOrdenada));
-			dadosCA.setPrimeiroQuartil(MedianaQuartis.primeiroQuartil(listaNumLinhasOrdenada));
-			dadosCA.setTerceiroQuartil(MedianaQuartis.terceiroQuartil(listaNumLinhasOrdenada));
+			//dadosCA.setPrimeiroQuartil(MedianaQuartis.primeiroQuartil(listaNumLinhasOrdenada));
+			dadosCA.setTerceiroQuartil(MedianaQuartis.terceiroQuartil(listaNumLinhasOrdenada, 
+					porcentagemLimiar));
 			if (grupoEhRegra1(grupo)) {
 				dadosCA.setExtendsClass(grupo.get(0).getClassesExtendsImplements().get(0));
 				dadosCA.setImplementsAPIJava(null);

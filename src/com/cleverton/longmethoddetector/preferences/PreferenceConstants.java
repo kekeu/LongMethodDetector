@@ -11,4 +11,6 @@ public class PreferenceConstants {
 
 	public static final String VALOR_LIMIAR = "intergerPreference";
 	
+	public static final String PORCENTAGEM_PROJETO_EXEMPLO = "porcentagemPreference";
+	
 }

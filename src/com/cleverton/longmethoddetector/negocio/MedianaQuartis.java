@@ -26,29 +26,57 @@ public class MedianaQuartis {
 		
 	}
 
+	// TODO: Verificar calculo
 	public static int primeiroQuartil(ArrayList<Integer> metodosOrdenados) {
 		if (metodosOrdenados.size() == 0) {
 			return 0;
 		}
+		if (metodosOrdenados.size() == 1) {
+			return metodosOrdenados.get(0);
+		}
 		double posicaoReal = (metodosOrdenados.size()+1)/4;
 		int posicaoInteira = (int)posicaoReal;
 		if (posicaoReal == posicaoInteira) {
-			return metodosOrdenados.get(posicaoInteira == 0? posicaoInteira : posicaoInteira - 1);
+			if (posicaoInteira == 0) {
+				metodosOrdenados.get(posicaoInteira);
+			}
+			return metodosOrdenados.get(posicaoInteira - 1);
 		} else {
+			if (posicaoInteira == 0) {
+				return (metodosOrdenados.get(0) + metodosOrdenados.get(1))/2;
+			}
+			if (posicaoInteira == metodosOrdenados.size()) {
+				return (metodosOrdenados.get(posicaoInteira-2) + metodosOrdenados.get(posicaoInteira-1))/2;
+			}
 			return (metodosOrdenados.get(posicaoInteira) + 
 					metodosOrdenados.get(posicaoInteira - 1))/2;
 		}
 	}	
 	
-	public static int terceiroQuartil(ArrayList<Integer> metodosOrdenados) {
+	public static int terceiroQuartil(ArrayList<Integer> metodosOrdenados, int porcentagemLimiar) {
 		if (metodosOrdenados.size() == 0) {
 			return 0;
 		}
-		double posicaoReal = (3*(metodosOrdenados.size()+1))/4;
+		if (metodosOrdenados.size() == 1) {
+			return metodosOrdenados.get(0);
+		}
+		double posicaoReal = ((double)porcentagemLimiar/100)*(metodosOrdenados.size()+1);
 		int posicaoInteira = (int)posicaoReal;
 		if (posicaoReal == posicaoInteira) {
+			if (posicaoInteira == 0) {
+				metodosOrdenados.get(posicaoInteira);
+			}
+			if (posicaoInteira >= metodosOrdenados.size()) {
+				return metodosOrdenados.get(metodosOrdenados.size() - 1);
+			}
 			return metodosOrdenados.get(posicaoInteira - 1);
 		} else {
+			if (posicaoInteira == 0) {
+				return (metodosOrdenados.get(0) + metodosOrdenados.get(1))/2;
+			}
+			if (posicaoInteira == metodosOrdenados.size()) {
+				return (metodosOrdenados.get(posicaoInteira-2) + metodosOrdenados.get(posicaoInteira-1))/2;
+			}
 			return (metodosOrdenados.get(posicaoInteira) + 
 					metodosOrdenados.get(posicaoInteira - 1))/2;
 		}
