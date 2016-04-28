@@ -35,7 +35,7 @@ implements IWorkbenchPreferencePage {
 	public static final String OPCAOVALORLIMIAR = "valorLimiar";
 
 	private String[][] opcoesRadioGroup = {{ "Usar projeto como exemplo", OPCAOPROJETOEXEMPLO }, 
-			{"valor Limiar", OPCAOVALORLIMIAR }};
+			{"Valor Limiar", OPCAOVALORLIMIAR }};
 
 	public ValorMetodoLongoPreferencePage() {
 		super(GRID);

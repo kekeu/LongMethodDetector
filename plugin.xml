@@ -54,7 +54,7 @@
 		<objectContribution id="Clarity.objectContribution2"
 	 		objectClass="org.eclipse.jdt.core.IOpenable">
          	<action
-               label="Analisar Projeto"
+               label="Analisar Projeto - LMD"
                class="com.cleverton.longmethoddetector.popup.AdicionarAnaliseProjeto"
                menubarPath="additions"
                id="com.cleverton.longmethoddetector.popupMenu.adicionarProjeto">
@@ -65,7 +65,7 @@
 		<objectContribution id="Clarity.objectContribution2"
 	 		objectClass="org.eclipse.jdt.core.IOpenable">
          	<action
-               label="Remover Projeto"
+               label="Remover Projeto da Análise - LMD"
                class="com.cleverton.longmethoddetector.popup.RemoverAnaliseProjeto"
                menubarPath="additions"
                id="com.cleverton.longmethoddetector.popupMenu.removerProjeto">
