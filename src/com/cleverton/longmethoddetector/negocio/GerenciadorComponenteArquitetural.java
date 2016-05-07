@@ -22,7 +22,7 @@ public class GerenciadorComponenteArquitetural {
 					criarListaNumeroLinhasMetodosDoGrupo(grupo));
 			dadosCA.setMediana(MedianaQuartis.calcularMediana(listaNumLinhasOrdenada));
 			//dadosCA.setPrimeiroQuartil(MedianaQuartis.primeiroQuartil(listaNumLinhasOrdenada));
-			dadosCA.setTerceiroQuartil(MedianaQuartis.terceiroQuartil(listaNumLinhasOrdenada, 
+			dadosCA.setTerceiroQuartil(MedianaQuartis.percentil(listaNumLinhasOrdenada, 
 					porcentagemLimiar));
 			if (grupoEhRegra1(grupo)) {
 				dadosCA.setExtendsClass(grupo.get(0).getClassesExtendsImplements().get(0));

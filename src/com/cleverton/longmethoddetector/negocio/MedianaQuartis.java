@@ -53,32 +53,16 @@ public class MedianaQuartis {
 		}
 	}	
 	
-	public static int terceiroQuartil(ArrayList<Integer> metodosOrdenados, int porcentagemLimiar) {
+	public static int percentil(ArrayList<Integer> metodosOrdenados, int porcentagemLimiar) {
 		if (metodosOrdenados.size() == 0) {
 			return 0;
 		}
-		if (metodosOrdenados.size() == 1) {
-			return metodosOrdenados.get(0);
-		}
-		double posicaoReal = ((double)porcentagemLimiar/100)*(metodosOrdenados.size()+1);
+		double posicaoReal = ((double)porcentagemLimiar/100)*(metodosOrdenados.size());
 		int posicaoInteira = (int)posicaoReal;
-		if (posicaoReal == posicaoInteira) {
-			if (posicaoInteira == 0) {
-				metodosOrdenados.get(posicaoInteira);
-			}
-			if (posicaoInteira >= metodosOrdenados.size()) {
-				return metodosOrdenados.get(metodosOrdenados.size() - 1);
-			}
-			return metodosOrdenados.get(posicaoInteira - 1);
+		if (posicaoReal != posicaoInteira) {
+			return metodosOrdenados.get(posicaoInteira);
 		} else {
-			if (posicaoInteira == 0) {
-				return (metodosOrdenados.get(0) + metodosOrdenados.get(1))/2;
-			}
-			if (posicaoInteira == metodosOrdenados.size()) {
-				return (metodosOrdenados.get(posicaoInteira-2) + metodosOrdenados.get(posicaoInteira-1))/2;
-			}
-			return (metodosOrdenados.get(posicaoInteira) + 
-					metodosOrdenados.get(posicaoInteira - 1))/2;
+			return ((metodosOrdenados.get(posicaoInteira) + metodosOrdenados.get(posicaoInteira-1))/2);
 		}
 	}
 	
