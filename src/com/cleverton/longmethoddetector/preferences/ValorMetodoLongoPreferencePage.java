@@ -3,6 +3,7 @@ package com.cleverton.longmethoddetector.preferences;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import com.cleverton.longmethoddetector.Activator;
@@ -27,15 +28,22 @@ public class ValorMetodoLongoPreferencePage extends FieldEditorPreferencePage
 implements IWorkbenchPreferencePage {
 
 	private DirectoryFieldEditor projetoExemploDirectory;
-	private RadioGroupFieldEditor escolhaRadioGroup;
+	private RadioGroupFieldEditor escolhaProjetoExemploValorLimiarRG;
 	private IntegerFieldEditor valorLimiarField;
 	private IntegerFieldEditor porcentagemProjetoExemploField;
-
+	private RadioGroupFieldEditor escolhaGeralPorPreocupacaoRG;
+	
 	public static final String OPCAOPROJETOEXEMPLO = "projetoExemplo";
 	public static final String OPCAOVALORLIMIAR = "valorLimiar";
+	public static final String OPCAOCALCULARGERAL = "geral";
+	public static final String OPCAOCALCULARPORPREOCUPACAO = "porPreocupacao";
 
-	private String[][] opcoesRadioGroup = {{ "Usar projeto como exemplo", OPCAOPROJETOEXEMPLO }, 
+	private String[][] opcoesProjetoRG = {{ "Usar projeto como exemplo", OPCAOPROJETOEXEMPLO }, 
 			{"Valor Limiar", OPCAOVALORLIMIAR }};
+	
+	private String[][] opcoesCalculoRG = {
+			{"Calcular por Preocupação Arquitetural", OPCAOCALCULARPORPREOCUPACAO }, 
+			{"Calcular sem Preocupação Arquitetural", OPCAOVALORLIMIAR }};
 
 	public ValorMetodoLongoPreferencePage() {
 		super(GRID);
@@ -49,9 +57,11 @@ implements IWorkbenchPreferencePage {
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
-		escolhaRadioGroup = new RadioGroupFieldEditor(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR,
-				"Escolha o tipo de valor a ser utilizado: ", 1, opcoesRadioGroup
-				, getFieldEditorParent(), true);
+		escolhaProjetoExemploValorLimiarRG = new RadioGroupFieldEditor(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR,
+				"Escolha o tipo de valor a ser utilizado: ", 1, opcoesProjetoRG, getFieldEditorParent(), true);
+		
+		escolhaGeralPorPreocupacaoRG = new RadioGroupFieldEditor(PreferenceConstants.CALCULAR_GERAL_POR_PREOCUPACAO,
+				"Escolha como utilizar o projeto exemplo: ", 1, opcoesCalculoRG, getFieldEditorParent(), true);
 
 		projetoExemploDirectory = new DirectoryFieldEditor(PreferenceConstants.PROJETO_EXEMPLO, 
 				"Diretório do projeto: ", getFieldEditorParent());
@@ -63,19 +73,25 @@ implements IWorkbenchPreferencePage {
 
 		valorLimiarField = new IntegerFieldEditor(PreferenceConstants.VALOR_LIMIAR, "Valor limiar:", 
 				getFieldEditorParent());
-
-		addField(escolhaRadioGroup);
-		addField(projetoExemploDirectory);
-		addField(porcentagemProjetoExemploField);
+		
+		addField(escolhaProjetoExemploValorLimiarRG);
 		addField(valorLimiarField);
-
+		addField(projetoExemploDirectory);
+		addField(escolhaGeralPorPreocupacaoRG);
+		addField(porcentagemProjetoExemploField);
+		
 		changeFieldsPorPreferences();
 	}
 
 	public void changeFieldsPorPreferences() {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		if (store.getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(OPCAOPROJETOEXEMPLO)) {
+		if (getPreferenceStore().getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(OPCAOPROJETOEXEMPLO)) {
 			habilitarCamposProjetoExemplo();
+			if (getPreferenceStore().getString(
+					PreferenceConstants.CALCULAR_GERAL_POR_PREOCUPACAO).equals(OPCAOCALCULARPORPREOCUPACAO)) {
+				porcentagemProjetoExemploField.setEnabled(true, getFieldEditorParent());
+			} else {
+				porcentagemProjetoExemploField.setEnabled(false, getFieldEditorParent());
+			}
 		} else {
 			habilitarCamposValorLimiar();
 		}
@@ -84,23 +100,33 @@ implements IWorkbenchPreferencePage {
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
-		if (event.getSource() == escolhaRadioGroup) {
+		if (event.getSource() == escolhaProjetoExemploValorLimiarRG) {
 			if (event.getNewValue().toString().equals(OPCAOPROJETOEXEMPLO)) {
 				habilitarCamposProjetoExemplo();
+				escolhaGeralPorPreocupacaoRG.load();
 			} else {
 				habilitarCamposValorLimiar();
+			}
+		}
+		if (event.getSource() == escolhaGeralPorPreocupacaoRG) {
+			if (event.getNewValue().toString().equals(OPCAOCALCULARPORPREOCUPACAO)) {
+				porcentagemProjetoExemploField.setEnabled(true, getFieldEditorParent());
+			} else {
+				porcentagemProjetoExemploField.setEnabled(false, getFieldEditorParent());
 			}
 		}
 	}
 
 	private void habilitarCamposProjetoExemplo() {
 		projetoExemploDirectory.setEnabled(true, getFieldEditorParent());
+		escolhaGeralPorPreocupacaoRG.setEnabled(true, getFieldEditorParent());
 		valorLimiarField.setEnabled(false, getFieldEditorParent());
 		porcentagemProjetoExemploField.setEnabled(true, getFieldEditorParent());
 	}
 
 	private void habilitarCamposValorLimiar() {
 		projetoExemploDirectory.setEnabled(false, getFieldEditorParent());
+		escolhaGeralPorPreocupacaoRG.setEnabled(false, getFieldEditorParent());
 		valorLimiarField.setEnabled(true, getFieldEditorParent());
 		porcentagemProjetoExemploField.setEnabled(false, getFieldEditorParent());
 	}
@@ -113,23 +139,7 @@ implements IWorkbenchPreferencePage {
 
 	@Override
 	public boolean performOk() {
-		MessageDialog dialog = null;
-		if (projetoExemploDirectory.getLabelControl(getFieldEditorParent()).getEnabled() &&
-				(projetoExemploDirectory.getStringValue() == null || 
-				projetoExemploDirectory.getStringValue().equals(""))) {
-			dialog = new MessageDialog(null, "Preferences Page", null, 
-					"Selecione um projeto para ser usado na analise como Projeto de Exemplo.", 
-					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
-			dialog.open();
-			return false;
-		}
-		if (porcentagemProjetoExemploField.getLabelControl(getFieldEditorParent()).getEnabled() &&
-				(porcentagemProjetoExemploField.getIntValue() < 1 || 
-				porcentagemProjetoExemploField.getIntValue() > 100)) {
-			dialog = new MessageDialog(null, "Preferences Page", null, 
-					"Selecione um valor de porcentagem entre 1% e 100%.", 
-					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
-			dialog.open();
+		if (temErrosCamposPreferencesPage()) {
 			return false;
 		}
 		return super.performOk();
@@ -137,6 +147,13 @@ implements IWorkbenchPreferencePage {
 
 	@Override
 	protected void performApply() {
+		if (temErrosCamposPreferencesPage()) {
+			return;
+		}
+		super.performApply();
+	}
+
+	public boolean temErrosCamposPreferencesPage() {
 		MessageDialog dialog = null;
 		if (projetoExemploDirectory.getLabelControl(getFieldEditorParent()).getEnabled() &&
 				(projetoExemploDirectory.getStringValue() == null || 
@@ -145,20 +162,20 @@ implements IWorkbenchPreferencePage {
 					"Selecione um projeto para ser usado na analise como Projeto de Exemplo.", 
 					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
 			dialog.open();
-			return;
+			return true;
 		}
 		if (porcentagemProjetoExemploField.getLabelControl(getFieldEditorParent()).getEnabled() &&
 				(porcentagemProjetoExemploField.getIntValue() < 1 || 
-				porcentagemProjetoExemploField.getIntValue() > 100)) {
+				porcentagemProjetoExemploField.getIntValue() > 99)) {
 			dialog = new MessageDialog(null, "Preferences Page", null, 
-					"Selecione um valor de porcentagem entre 1% e 100%.", 
+					"Selecione um valor de porcentagem entre 1% e 99%.", 
 					MessageDialog.INFORMATION, new String[] {"OK"}, 0);
 			dialog.open();
-			return;
+			return true;
 		}
-		super.performApply();
+		return false;
 	}
-
+	
 	@Override
 	public void dispose() {
 		super.dispose();
