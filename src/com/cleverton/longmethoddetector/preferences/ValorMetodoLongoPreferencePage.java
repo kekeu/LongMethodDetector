@@ -165,6 +165,8 @@ implements IWorkbenchPreferencePage {
 	public void dispose() {
 		super.dispose();
 		ProviderModel.INSTANCE.dadosComponentesArquiteturais = null;
+		ProviderModel.INSTANCE.valorLimiarGlobal = 0;
+		ProviderModel.INSTANCE.medianaGlobal = 0;
 		AtualizadorInformacoesMetodoLongo.refreshAll();
 	}
 

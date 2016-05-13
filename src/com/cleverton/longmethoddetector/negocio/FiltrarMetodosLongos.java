@@ -10,7 +10,6 @@ import com.cleverton.longmethoddetector.model.DadosClasse;
 import com.cleverton.longmethoddetector.model.DadosComponentesArquiteturais;
 import com.cleverton.longmethoddetector.model.DadosMetodo;
 import com.cleverton.longmethoddetector.model.DadosMetodoLongo;
-import com.cleverton.longmethoddetector.model.ProviderModel;
 import com.cleverton.longmethoddetector.preferences.PreferenceConstants;
 
 public class FiltrarMetodosLongos {

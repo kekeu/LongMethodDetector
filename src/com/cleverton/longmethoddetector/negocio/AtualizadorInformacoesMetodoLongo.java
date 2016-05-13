@@ -62,7 +62,7 @@ public class AtualizadorInformacoesMetodoLongo {
 							ProviderModel.INSTANCE.metodoslongos.size() + " métodos encontrados.");
 				} else {
 					ProviderModel.INSTANCE.dadosClasses = analisadorProjeto.getInfoMetodosPorProjetos(
-							Activator.projetos, true);
+							Activator.projetos, false);
 					if (ProviderModel.INSTANCE.valorLimiarGlobal == 0) {
 						ProviderModel.INSTANCE.valorLimiarGlobal = gpe.
 								obterValorLimiarGlobal(store.getString(PreferenceConstants.PROJETO_EXEMPLO),
