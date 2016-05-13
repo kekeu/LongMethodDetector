@@ -11,6 +11,8 @@ public enum ProviderModel {
 	public ArrayList<DadosMetodoLongo> metodoslongos;
 	private ArrayList<String> interfacesAPI;
 	public LinkedList<DadosComponentesArquiteturais> dadosComponentesArquiteturais;
+	public int valorLimiarGlobal;
+	public int medianaGlobal;
 	
 	public ArrayList<String> getInterfacesAPI() {
 		if (interfacesAPI == null) {

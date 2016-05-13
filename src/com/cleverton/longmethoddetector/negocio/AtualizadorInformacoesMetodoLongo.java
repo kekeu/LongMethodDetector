@@ -39,20 +39,47 @@ public class AtualizadorInformacoesMetodoLongo {
 					Activator.projetos, false);
 			ProviderModel.INSTANCE.metodoslongos = filtrarMetodos.filtrarPorValorLimiar(
 					ProviderModel.INSTANCE.dadosClasses);
+			System.out.println("Métodos longos valor limiar: " + 
+					ProviderModel.INSTANCE.metodoslongos.size() + " métodos encontrados.");
 		} else {
+			GerenciadorProjetoExemplo gpe = new GerenciadorProjetoExemplo();
 			if (store.getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(
 					ValorMetodoLongoPreferencePage.OPCAOPROJETOEXEMPLO)) {
-				ProviderModel.INSTANCE.dadosClasses = analisadorProjeto.getInfoMetodosPorProjetos(
-						Activator.projetos, true);
-				GerenciadorComponenteArquitetural gca = new GerenciadorComponenteArquitetural();
-				if (ProviderModel.INSTANCE.dadosComponentesArquiteturais == null) {
-					ProviderModel.INSTANCE.dadosComponentesArquiteturais = gca.criarTabelaCompArquiteturais(
-							store.getString(PreferenceConstants.PROJETO_EXEMPLO), 
-							store.getInt(PreferenceConstants.PORCENTAGEM_PROJETO_EXEMPLO));
+				if (store.getString(PreferenceConstants.CALCULAR_GERAL_POR_PREOCUPACAO).equals(
+						ValorMetodoLongoPreferencePage.OPCAOCALCULARPORPREOCUPACAO)) {
+					ProviderModel.INSTANCE.dadosClasses = analisadorProjeto.getInfoMetodosPorProjetos(
+							Activator.projetos, true);
+					
+					if (ProviderModel.INSTANCE.dadosComponentesArquiteturais == null) {
+						ProviderModel.INSTANCE.dadosComponentesArquiteturais = gpe.
+							criarTabelaCompArquiteturais(store.getString(PreferenceConstants.PROJETO_EXEMPLO),
+									store.getInt(PreferenceConstants.PORCENTAGEM_PROJETO_EXEMPLO));
+					}
+					ProviderModel.INSTANCE.metodoslongos = filtrarMetodos.
+							filtrarPorProjetoExemploPreocupacaoArquitetural(ProviderModel.
+								INSTANCE.dadosClasses,ProviderModel.INSTANCE.dadosComponentesArquiteturais);
+					System.out.println("Métodos longos valor preocupação arquitetural: " + 
+							ProviderModel.INSTANCE.metodoslongos.size() + " métodos encontrados.");
+				} else {
+					ProviderModel.INSTANCE.dadosClasses = analisadorProjeto.getInfoMetodosPorProjetos(
+							Activator.projetos, true);
+					if (ProviderModel.INSTANCE.valorLimiarGlobal == 0) {
+						ProviderModel.INSTANCE.valorLimiarGlobal = gpe.
+								obterValorLimiarGlobal(store.getString(PreferenceConstants.PROJETO_EXEMPLO),
+										store.getInt(PreferenceConstants.PORCENTAGEM_PROJETO_EXEMPLO));
+					}
+					if (ProviderModel.INSTANCE.medianaGlobal == 0) {
+						ProviderModel.INSTANCE.medianaGlobal = gpe.
+								obterMedianaGlobal(store.getString(PreferenceConstants.PROJETO_EXEMPLO),
+										store.getInt(PreferenceConstants.PORCENTAGEM_PROJETO_EXEMPLO));
+					}
+					// Adicionar na lista de métodos longos
+					ProviderModel.INSTANCE.metodoslongos = filtrarMetodos.filtrarPorProjetoExemploGeral(
+						ProviderModel.INSTANCE.dadosClasses, ProviderModel.INSTANCE.valorLimiarGlobal, 
+						ProviderModel.INSTANCE.medianaGlobal);
+					System.out.println("Métodos longos valor global projeto exemplo: " + 
+							ProviderModel.INSTANCE.metodoslongos.size() + " métodos encontrados.");
 				}
-				ProviderModel.INSTANCE.metodoslongos = filtrarMetodos.filtrarPorProjetoExemmplo(
-						ProviderModel.INSTANCE.dadosClasses, 
-						ProviderModel.INSTANCE.dadosComponentesArquiteturais); 
 			}
 		}
 	}

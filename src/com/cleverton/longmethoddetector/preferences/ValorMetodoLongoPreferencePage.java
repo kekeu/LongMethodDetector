@@ -3,7 +3,6 @@ package com.cleverton.longmethoddetector.preferences;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import com.cleverton.longmethoddetector.Activator;
@@ -86,12 +85,6 @@ implements IWorkbenchPreferencePage {
 	public void changeFieldsPorPreferences() {
 		if (getPreferenceStore().getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(OPCAOPROJETOEXEMPLO)) {
 			habilitarCamposProjetoExemplo();
-			if (getPreferenceStore().getString(
-					PreferenceConstants.CALCULAR_GERAL_POR_PREOCUPACAO).equals(OPCAOCALCULARPORPREOCUPACAO)) {
-				porcentagemProjetoExemploField.setEnabled(true, getFieldEditorParent());
-			} else {
-				porcentagemProjetoExemploField.setEnabled(false, getFieldEditorParent());
-			}
 		} else {
 			habilitarCamposValorLimiar();
 		}
@@ -103,16 +96,8 @@ implements IWorkbenchPreferencePage {
 		if (event.getSource() == escolhaProjetoExemploValorLimiarRG) {
 			if (event.getNewValue().toString().equals(OPCAOPROJETOEXEMPLO)) {
 				habilitarCamposProjetoExemplo();
-				escolhaGeralPorPreocupacaoRG.load();
 			} else {
 				habilitarCamposValorLimiar();
-			}
-		}
-		if (event.getSource() == escolhaGeralPorPreocupacaoRG) {
-			if (event.getNewValue().toString().equals(OPCAOCALCULARPORPREOCUPACAO)) {
-				porcentagemProjetoExemploField.setEnabled(true, getFieldEditorParent());
-			} else {
-				porcentagemProjetoExemploField.setEnabled(false, getFieldEditorParent());
 			}
 		}
 	}

@@ -10,6 +10,7 @@ import com.cleverton.longmethoddetector.model.DadosClasse;
 import com.cleverton.longmethoddetector.model.DadosComponentesArquiteturais;
 import com.cleverton.longmethoddetector.model.DadosMetodo;
 import com.cleverton.longmethoddetector.model.DadosMetodoLongo;
+import com.cleverton.longmethoddetector.model.ProviderModel;
 import com.cleverton.longmethoddetector.preferences.PreferenceConstants;
 
 public class FiltrarMetodosLongos {
@@ -23,7 +24,7 @@ public class FiltrarMetodosLongos {
 			//System.out.println(classe.getNomeClasse() +"  --  "+classe.getMetodos().size());
 			//System.out.println();
 			for (DadosMetodo metodo : classe.getMetodos()) {
-				if (metodo.getNumeroLinhas() >= valorLimiar) {
+				if (metodo.getNumeroLinhas() > valorLimiar) {
 					DadosMetodoLongo dadosML = new DadosMetodoLongo();
 					dadosML.setCharFinal(metodo.getCharFinal());
 					dadosML.setCharInicial(metodo.getCharInicial());
@@ -43,9 +44,35 @@ public class FiltrarMetodosLongos {
 		return listaMetodosLongos;
 	}
 	
-	public ArrayList<DadosMetodoLongo> filtrarPorProjetoExemmplo(
+	public ArrayList<DadosMetodoLongo> filtrarPorProjetoExemploGeral(
+			ArrayList<DadosClasse> dadosClasse, int valorLimiarGlobal, int medianaGlobal) {
+		ArrayList<DadosMetodoLongo> listaMetodosLongos = new ArrayList<>();
+		for (DadosClasse classe : dadosClasse) {
+			for (DadosMetodo metodo : classe.getMetodos()) {
+				if (metodo.getNumeroLinhas() > valorLimiarGlobal) {
+					DadosMetodoLongo dadosML = new DadosMetodoLongo();
+					dadosML.setCharFinal(metodo.getCharFinal());
+					dadosML.setCharInicial(metodo.getCharInicial());
+					dadosML.setDiretorioDaClasse(classe.getDiretorioDaClasse());
+					dadosML.setLinhaInicial(metodo.getLinhaInicial());
+					dadosML.setNomeClasse(classe.getNomeClasse());
+					dadosML.setNomeMetodo(metodo.getNomeMetodo());
+					dadosML.setNumeroLinhas(metodo.getNumeroLinhas());
+					dadosML.setMensagem("Este MÉTODO LONGO contém " + metodo.getNumeroLinhas() + " linhas."
+							+ "\n\nÉ recomendável realizar refatoração para diminuir o seu tamanho."
+							+ "\nOs métodos do projeto devem ter no máximo " + valorLimiarGlobal + " linhas."
+							+ "\nA Mediana dos métodos do projeto é de " + medianaGlobal 
+							+ " linhas de código.");
+					listaMetodosLongos.add(dadosML);
+				}
+			}
+		}
+		return listaMetodosLongos;
+	}
+	
+	public ArrayList<DadosMetodoLongo> filtrarPorProjetoExemploPreocupacaoArquitetural(
 			ArrayList<DadosClasse> dadosClasse, LinkedList<DadosComponentesArquiteturais> dca) {
-		GerenciadorComponenteArquitetural gca = new GerenciadorComponenteArquitetural();
+		GerenciadorProjetoExemplo gca = new GerenciadorProjetoExemplo();
 		ArrayList<DadosMetodoLongo> metodosLongos = new ArrayList<>();
 		for (DadosClasse classe : dadosClasse) {
 			boolean analisarProximaRegra = true;
@@ -130,7 +157,7 @@ public class FiltrarMetodosLongos {
 				dadosML.setMensagem("Este MÉTODO LONGO contém " + metodo.getNumeroLinhas() + " linhas."
 						+ "\n\nÉ recomendável realizar refatoração para diminuir o seu tamanho."
 						+ "\n\nMétodos de classes que utilizam o COMPONENTE ARQUITETURAL " 
-						+ GerenciadorComponenteArquitetural.getClasseComponente(componente)
+						+ GerenciadorProjetoExemplo.getClasseComponente(componente)
 						+ " devem conter no máximo " + componente.getTerceiroQuartil() + " linhas."
 						+ "\nA média de linhas de código para métodos desses componentes arquiteturais é de "
 						+ componente.getMediana() + " linhas.");

@@ -10,8 +10,22 @@ import com.cleverton.longmethoddetector.model.DadosComponentesArquiteturais;
 import com.cleverton.longmethoddetector.model.DadosMetodo;
 import com.cleverton.longmethoddetector.model.ProviderModel;
 
-public class GerenciadorComponenteArquitetural {
+public class GerenciadorProjetoExemplo {
 
+	public int obterValorLimiarGlobal(String projetoExemplo, int porcentagemLimiar) {
+		List<DadosClasse> listaClasses = obterListaClassesProjetoExemplo(false, projetoExemplo);
+		ArrayList<Integer> listaNumLinhasOrdenada = MedianaQuartis.ordernarOrdemCrescente(
+				criarListaNumeroLinhasMetodosDoGrupo(listaClasses));
+		return MedianaQuartis.percentil(listaNumLinhasOrdenada,porcentagemLimiar);
+	}
+	
+	public int obterMedianaGlobal(String projetoExemplo, int porcentagemLimiar) {
+		List<DadosClasse> listaClasses = obterListaClassesProjetoExemplo(false, projetoExemplo);
+		ArrayList<Integer> listaNumLinhasOrdenada = MedianaQuartis.ordernarOrdemCrescente(
+				criarListaNumeroLinhasMetodosDoGrupo(listaClasses));
+		return MedianaQuartis.calcularMediana(listaNumLinhasOrdenada);
+	}
+	
 	public LinkedList<DadosComponentesArquiteturais> criarTabelaCompArquiteturais(
 			String projetoExemplo, int porcentagemLimiar) {
 		LinkedList<List<DadosClasse>> grupos = criarGruposComponentesArquiteturais(projetoExemplo);
@@ -103,10 +117,7 @@ public class GerenciadorComponenteArquitetural {
 	}
 
 	public LinkedList<List<DadosClasse>> criarGruposComponentesArquiteturais(String projetoExemplo) {
-		ArrayList<String> listaProjetoExemplo = new ArrayList<String>();
-		listaProjetoExemplo.add(projetoExemplo);
-		AnalisadorProjeto analisador = new AnalisadorProjeto();
-		List<DadosClasse> listaClasses = analisador.getInfoMetodosPorProjetos(listaProjetoExemplo, true);
+		List<DadosClasse> listaClasses = obterListaClassesProjetoExemplo(true, projetoExemplo);
 		LinkedList<List<DadosClasse>> grupos = new LinkedList<List<DadosClasse>>();
 		for (DadosClasse classe: listaClasses) {
 			classificarClassesGrupos(classe, grupos);
@@ -114,7 +125,21 @@ public class GerenciadorComponenteArquitetural {
 		formarGrupoClassesNaoClassificadas(grupos);
 		return grupos;
 	}
-
+	
+	/**
+	 * TODO: Falta descrever
+	 * @param adicionarArquitetura
+	 * @param projetoExemplo
+	 * @return
+	 */
+	public List<DadosClasse> obterListaClassesProjetoExemplo(boolean adicionarArquitetura,
+			String projetoExemplo) {
+		ArrayList<String> listaProjetoExemplo = new ArrayList<String>();
+		listaProjetoExemplo.add(projetoExemplo);
+		AnalisadorProjeto analisador = new AnalisadorProjeto();
+		return analisador.getInfoMetodosPorProjetos(listaProjetoExemplo, adicionarArquitetura);
+	}
+	
 	public void formarGrupoClassesNaoClassificadas(LinkedList<List<DadosClasse>> grupos) {
 		List<DadosClasse> novoGrupo = new ArrayList<>();
 		for(Iterator<List<DadosClasse>> iter = grupos.iterator(); iter.hasNext();) {
@@ -235,5 +260,7 @@ public class GerenciadorComponenteArquitetural {
 		}
 		return "Não Classificado";
 	}
+	
+	
 	
 }
