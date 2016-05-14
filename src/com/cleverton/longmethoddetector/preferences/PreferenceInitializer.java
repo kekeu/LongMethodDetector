@@ -21,8 +21,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				ValorMetodoLongoPreferencePage.OPCAOVALORLIMIAR);
 		store.setDefault(PreferenceConstants.VALOR_LIMIAR, 10);
 		store.setDefault(PreferenceConstants.PORCENTAGEM_PROJETO_EXEMPLO, 75);
-		store.setDefault(PreferenceConstants.CALCULAR_GERAL_POR_PREOCUPACAO, 
-				ValorMetodoLongoPreferencePage.OPCAOCALCULARPORPREOCUPACAO);
+		store.setDefault(PreferenceConstants.USAR_PREOCUPACAO_ARQUITETURAL, false);
 	}
 
 }

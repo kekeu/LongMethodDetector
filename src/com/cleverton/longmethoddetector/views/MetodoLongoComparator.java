@@ -58,6 +58,9 @@ public class MetodoLongoComparator extends ViewerComparator {
 			} else
 				rc = -1;
 			break;
+		case 5:
+			rc = p1.getType().compareTo(p2.getType());
+			break;
 		default:
 			rc = 0;
 		}

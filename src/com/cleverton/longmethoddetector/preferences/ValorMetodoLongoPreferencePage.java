@@ -30,19 +30,16 @@ implements IWorkbenchPreferencePage {
 	private RadioGroupFieldEditor escolhaProjetoExemploValorLimiarRG;
 	private IntegerFieldEditor valorLimiarField;
 	private IntegerFieldEditor porcentagemProjetoExemploField;
-	private RadioGroupFieldEditor escolhaGeralPorPreocupacaoRG;
+	private BooleanFieldEditor usarInteresseBooleanField;
 	
 	public static final String OPCAOPROJETOEXEMPLO = "projetoExemplo";
 	public static final String OPCAOVALORLIMIAR = "valorLimiar";
 	public static final String OPCAOCALCULARGERAL = "geral";
 	public static final String OPCAOCALCULARPORPREOCUPACAO = "porPreocupacao";
 
-	private String[][] opcoesProjetoRG = {{ "Usar projeto como exemplo", OPCAOPROJETOEXEMPLO }, 
-			{"Valor Limiar", OPCAOVALORLIMIAR }};
-	
-	private String[][] opcoesCalculoRG = {
-			{"Calcular por Preocupação Arquitetural", OPCAOCALCULARPORPREOCUPACAO }, 
-			{"Calcular sem Preocupação Arquitetural", OPCAOVALORLIMIAR }};
+	private String[][] opcoesProjetoRG = {
+			{"Extract threshold values of a sample project", OPCAOPROJETOEXEMPLO }, 
+			{"Use generics threshold values", OPCAOVALORLIMIAR }};
 
 	public ValorMetodoLongoPreferencePage() {
 		super(GRID);
@@ -57,27 +54,26 @@ implements IWorkbenchPreferencePage {
 	 */
 	public void createFieldEditors() {
 		escolhaProjetoExemploValorLimiarRG = new RadioGroupFieldEditor(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR,
-				"Escolha o tipo de valor a ser utilizado: ", 1, opcoesProjetoRG, getFieldEditorParent(), true);
+				"&Choose the approach to code review: ", 1, opcoesProjetoRG, getFieldEditorParent(), true);
 		
-		escolhaGeralPorPreocupacaoRG = new RadioGroupFieldEditor(PreferenceConstants.CALCULAR_GERAL_POR_PREOCUPACAO,
-				"Escolha como utilizar o projeto exemplo: ", 1, opcoesCalculoRG, getFieldEditorParent(), true);
-
 		projetoExemploDirectory = new DirectoryFieldEditor(PreferenceConstants.PROJETO_EXEMPLO, 
-				"Diretório do projeto: ", getFieldEditorParent());
+				"&Sample Project Folder:  ", getFieldEditorParent());
 
 		porcentagemProjetoExemploField = new IntegerFieldEditor(PreferenceConstants
-				.PORCENTAGEM_PROJETO_EXEMPLO, "Porcentagem de métodos compreendidos "
-						+ "nos \nvalor limiar dos componentes arquiteturais:", 
+				.PORCENTAGEM_PROJETO_EXEMPLO, "&Percentile considered to Extract  Threshold Values: ", 
 						getFieldEditorParent());
+		
+		usarInteresseBooleanField = new BooleanFieldEditor(PreferenceConstants.USAR_PREOCUPACAO_ARQUITETURAL,
+		        "&An example of a boolean preference", getFieldEditorParent());
 
-		valorLimiarField = new IntegerFieldEditor(PreferenceConstants.VALOR_LIMIAR, "Valor limiar:", 
+		valorLimiarField = new IntegerFieldEditor(PreferenceConstants.VALOR_LIMIAR, "LOC/Method: ", 
 				getFieldEditorParent());
 		
 		addField(escolhaProjetoExemploValorLimiarRG);
 		addField(valorLimiarField);
 		addField(projetoExemploDirectory);
-		addField(escolhaGeralPorPreocupacaoRG);
 		addField(porcentagemProjetoExemploField);
+		addField(usarInteresseBooleanField);
 		
 		changeFieldsPorPreferences();
 	}
@@ -104,16 +100,16 @@ implements IWorkbenchPreferencePage {
 
 	private void habilitarCamposProjetoExemplo() {
 		projetoExemploDirectory.setEnabled(true, getFieldEditorParent());
-		escolhaGeralPorPreocupacaoRG.setEnabled(true, getFieldEditorParent());
 		valorLimiarField.setEnabled(false, getFieldEditorParent());
 		porcentagemProjetoExemploField.setEnabled(true, getFieldEditorParent());
+		usarInteresseBooleanField.setEnabled(true, getFieldEditorParent());
 	}
 
 	private void habilitarCamposValorLimiar() {
 		projetoExemploDirectory.setEnabled(false, getFieldEditorParent());
-		escolhaGeralPorPreocupacaoRG.setEnabled(false, getFieldEditorParent());
 		valorLimiarField.setEnabled(true, getFieldEditorParent());
 		porcentagemProjetoExemploField.setEnabled(false, getFieldEditorParent());
+		usarInteresseBooleanField.setEnabled(false, getFieldEditorParent());
 	}
 
 	@Override

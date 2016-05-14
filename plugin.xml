@@ -5,11 +5,11 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="LongMenthodDetector"
+            name="Architecture-Sensitive Smells Detector"
             id="com.cleverton.longmethoddetector">
       </category>
       <view
-            name="View Métodos Longos"
+            name="Code smells"
             icon="icons/find.png"
             category="com.cleverton.longmethoddetector"
             class="com.cleverton.longmethoddetector.views.MetodoLongoView"
@@ -39,7 +39,7 @@
       <page
             class="com.cleverton.longmethoddetector.preferences.ValorMetodoLongoPreferencePage"
             id="com.cleverton.longmethoddetector.preferences.ValorMetodoLongoPreferencePage"
-            name="LongMethodDetector">
+            name="Architecture-Sensitive Smells Detector">
       </page>
    </extension>
    <extension
@@ -54,7 +54,7 @@
 		<objectContribution id="Clarity.objectContribution2"
 	 		objectClass="org.eclipse.jdt.core.IOpenable">
          	<action
-               label="Analisar Projeto - LMD"
+               label="Analyze project - ASSD"
                class="com.cleverton.longmethoddetector.popup.AdicionarAnaliseProjeto"
                menubarPath="additions"
                id="com.cleverton.longmethoddetector.popupMenu.adicionarProjeto">
@@ -65,7 +65,7 @@
 		<objectContribution id="Clarity.objectContribution2"
 	 		objectClass="org.eclipse.jdt.core.IOpenable">
          	<action
-               label="Remover Projeto da Análise - LMD"
+               label="Remove project of the analysis - ASSD"
                class="com.cleverton.longmethoddetector.popup.RemoverAnaliseProjeto"
                menubarPath="additions"
                id="com.cleverton.longmethoddetector.popupMenu.removerProjeto">

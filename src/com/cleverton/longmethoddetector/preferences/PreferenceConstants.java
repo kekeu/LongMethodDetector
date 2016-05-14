@@ -13,6 +13,6 @@ public class PreferenceConstants {
 	
 	public static final String PORCENTAGEM_PROJETO_EXEMPLO = "porcentagemPreference";
 	
-	public static final String CALCULAR_GERAL_POR_PREOCUPACAO = "opcaoCalcularGeralPorPreocupacao";
+	public static final String USAR_PREOCUPACAO_ARQUITETURAL = "usarInteresseArquitetural";
 	
 }

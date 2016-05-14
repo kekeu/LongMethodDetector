@@ -32,10 +32,9 @@ public class FiltrarMetodosLongos {
 					dadosML.setNomeClasse(classe.getNomeClasse());
 					dadosML.setNomeMetodo(metodo.getNomeMetodo());
 					dadosML.setNumeroLinhas(metodo.getNumeroLinhas());
-					dadosML.setMensagem("Este MÉTODO LONGO contém " + metodo.getNumeroLinhas() + " linhas."
-							+ "\n\nÉ recomendável realizar refatoração para diminuir o seu tamanho."
-							+ "\nOs métodos do projeto deve ter no máximo " + valorLimiar + " linhas."
-							+ " Como foi definido no VALOR LIMIAR.");
+					dadosML.setMensagem("Long method. Methods in this system have on maximum "
+							+ valorLimiar + " lines of code. "
+							+ "Make sure refactoring could be applied.");
 					listaMetodosLongos.add(dadosML);
 				}
 			}
@@ -57,11 +56,10 @@ public class FiltrarMetodosLongos {
 					dadosML.setNomeClasse(classe.getNomeClasse());
 					dadosML.setNomeMetodo(metodo.getNomeMetodo());
 					dadosML.setNumeroLinhas(metodo.getNumeroLinhas());
-					dadosML.setMensagem("Este MÉTODO LONGO contém " + metodo.getNumeroLinhas() + " linhas."
-							+ "\n\nÉ recomendável realizar refatoração para diminuir o seu tamanho."
-							+ "\nOs métodos do projeto devem ter no máximo " + valorLimiarGlobal + " linhas."
-							+ "\nA Mediana dos métodos do projeto é de " + medianaGlobal 
-							+ " linhas de código.");
+					dadosML.setMensagem("Long method. Methods in this system have between "
+							+ medianaGlobal + " and " + valorLimiarGlobal + " lines of code. "
+							+ "Make sure refactoring could be applied.");
+					dadosML.setType("Long Method");
 					listaMetodosLongos.add(dadosML);
 				}
 			}
@@ -153,13 +151,10 @@ public class FiltrarMetodosLongos {
 				dadosML.setNomeClasse(classe.getNomeClasse());
 				dadosML.setNomeMetodo(metodo.getNomeMetodo());
 				dadosML.setNumeroLinhas(metodo.getNumeroLinhas());
-				dadosML.setMensagem("Este MÉTODO LONGO contém " + metodo.getNumeroLinhas() + " linhas."
-						+ "\n\nÉ recomendável realizar refatoração para diminuir o seu tamanho."
-						+ "\n\nMétodos de classes que utilizam o COMPONENTE ARQUITETURAL " 
-						+ GerenciadorProjetoExemplo.getClasseComponente(componente)
-						+ " devem conter no máximo " + componente.getTerceiroQuartil() + " linhas."
-						+ "\nA média de linhas de código para métodos desses componentes arquiteturais é de "
-						+ componente.getMediana() + " linhas.");
+				dadosML.setMensagem("Long method. Methods in this architectural concern have between "
+						+ componente.getMediana() + " and " + componente.getTerceiroQuartil() 
+						+ " lines of code. Make sure refactoring could be applied.");
+				dadosML.setType("Long Method");
 				metodosLongos.add(dadosML);
 			}
 		}

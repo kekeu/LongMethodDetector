@@ -22,7 +22,7 @@ public class FileDecorator extends LabelProvider implements ILightweightLabelDec
 			if (GerenciadorProjeto.projetoEstaNaAnalise(((IResource)resource).getProject()
 					.getLocation().toString())) {
 				//decoration.addOverlay(ImageDescriptor.createFromFile(FileDecorator.class, ICON));
-				decoration.addSuffix(" Projeto Em Análise - LMD");
+				decoration.addSuffix(" Project in analysis - ASSD");
 				decoration.setFont(font);
 				decoration.setForegroundColor(color);
 			} else {
@@ -36,7 +36,7 @@ public class FileDecorator extends LabelProvider implements ILightweightLabelDec
 		if (markers > 0) {
 			//decoration.addOverlay(ImageDescriptor.createFromFile(FileDecorator.class, ICON));
 			//decoration.addPrefix("<T> ");
-			decoration.addSuffix(" " + markers + " Método(s) Longo(s)");
+			decoration.addSuffix(" " + markers + " Long methods");
 			decoration.setFont(font);
 			decoration.setForegroundColor(color);
 		}

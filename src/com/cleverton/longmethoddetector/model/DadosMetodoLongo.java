@@ -10,7 +10,16 @@ public class DadosMetodoLongo {
 	private int charInicial;
 	private int charFinal;
 	private String mensagem;
+	private String type;
 	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public String getMensagem() {
 		return mensagem;
 	}

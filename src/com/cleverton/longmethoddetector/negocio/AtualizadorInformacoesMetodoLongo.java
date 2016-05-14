@@ -45,8 +45,7 @@ public class AtualizadorInformacoesMetodoLongo {
 			GerenciadorProjetoExemplo gpe = new GerenciadorProjetoExemplo();
 			if (store.getString(PreferenceConstants.USAR_P_EXEMPLO_V_LIMIAR).equals(
 					ValorMetodoLongoPreferencePage.OPCAOPROJETOEXEMPLO)) {
-				if (store.getString(PreferenceConstants.CALCULAR_GERAL_POR_PREOCUPACAO).equals(
-						ValorMetodoLongoPreferencePage.OPCAOCALCULARPORPREOCUPACAO)) {
+				if (store.getBoolean(PreferenceConstants.USAR_PREOCUPACAO_ARQUITETURAL)) {
 					ProviderModel.INSTANCE.dadosClasses = analisadorProjeto.getInfoMetodosPorProjetos(
 							Activator.projetos, true);
 					
