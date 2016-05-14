@@ -34,7 +34,8 @@ public class FiltrarMetodosLongos {
 					dadosML.setNumeroLinhas(metodo.getNumeroLinhas());
 					dadosML.setMensagem("Long method. Methods in this system have on maximum "
 							+ valorLimiar + " lines of code. "
-							+ "Make sure refactoring could be applied.");
+							+ "\nMake sure refactoring could be applied.");
+					dadosML.setType("Long Method");
 					listaMetodosLongos.add(dadosML);
 				}
 			}
@@ -58,7 +59,7 @@ public class FiltrarMetodosLongos {
 					dadosML.setNumeroLinhas(metodo.getNumeroLinhas());
 					dadosML.setMensagem("Long method. Methods in this system have between "
 							+ medianaGlobal + " and " + valorLimiarGlobal + " lines of code. "
-							+ "Make sure refactoring could be applied.");
+							+ "\nMake sure refactoring could be applied.");
 					dadosML.setType("Long Method");
 					listaMetodosLongos.add(dadosML);
 				}

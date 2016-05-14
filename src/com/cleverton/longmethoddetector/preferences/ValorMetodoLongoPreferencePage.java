@@ -64,7 +64,7 @@ implements IWorkbenchPreferencePage {
 						getFieldEditorParent());
 		
 		usarInteresseBooleanField = new BooleanFieldEditor(PreferenceConstants.USAR_PREOCUPACAO_ARQUITETURAL,
-		        "&An example of a boolean preference", getFieldEditorParent());
+		        "&Consider architectural concerns", getFieldEditorParent());
 
 		valorLimiarField = new IntegerFieldEditor(PreferenceConstants.VALOR_LIMIAR, "LOC/Method: ", 
 				getFieldEditorParent());
