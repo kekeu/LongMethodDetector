@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Architecture-Sensitive Smells Detector"
+            name="ContextLongMethod"
             id="com.cleverton.longmethoddetector">
       </category>
       <view
@@ -39,7 +39,7 @@
       <page
             class="com.cleverton.longmethoddetector.preferences.ValorMetodoLongoPreferencePage"
             id="com.cleverton.longmethoddetector.preferences.ValorMetodoLongoPreferencePage"
-            name="Architecture-Sensitive Smells Detector">
+            name="ContextLongMethod">
       </page>
    </extension>
    <extension
@@ -54,7 +54,7 @@
 		<objectContribution id="Clarity.objectContribution2"
 	 		objectClass="org.eclipse.jdt.core.IOpenable">
          	<action
-               label="Analyze project - ASSD"
+               label="Enable ContextLongMethod Analysis"
                class="com.cleverton.longmethoddetector.popup.AdicionarAnaliseProjeto"
                menubarPath="additions"
                id="com.cleverton.longmethoddetector.popupMenu.adicionarProjeto">
@@ -65,7 +65,7 @@
 		<objectContribution id="Clarity.objectContribution2"
 	 		objectClass="org.eclipse.jdt.core.IOpenable">
          	<action
-               label="Remove project of the analysis - ASSD"
+               label="Disable ContextLongMethod Analysis"
                class="com.cleverton.longmethoddetector.popup.RemoverAnaliseProjeto"
                menubarPath="additions"
                id="com.cleverton.longmethoddetector.popupMenu.removerProjeto">
