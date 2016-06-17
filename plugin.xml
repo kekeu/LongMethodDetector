@@ -6,14 +6,14 @@
          point="org.eclipse.ui.views">
       <category
             name="ContextLongMethod"
-            id="com.cleverton.longmethoddetector">
+            id="br.ufs.smelldetector">
       </category>
       <view
             name="Code smells"
             icon="icons/find.png"
-            category="com.cleverton.longmethoddetector"
-            class="com.cleverton.longmethoddetector.views.MetodoLongoView"
-            id="com.cleverton.longmethoddetector.views.MetodoLongoView">
+            category="br.ufs.smelldetector"
+            class="br.ufs.smelldetector.views.MetodoLongoView"
+            id="br.ufs.smelldetector.views.MetodoLongoView">
       </view>
    </extension>
    <extension
@@ -24,7 +24,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.ProblemView"
                relationship="right"
-               id="com.cleverton.longmethoddetector.views.MetodoLongoView">
+               id="br.ufs.smelldetector.views.MetodoLongoView">
          </view>
       </perspectiveExtension>
    </extension>
@@ -37,15 +37,15 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="com.cleverton.longmethoddetector.preferences.ValorMetodoLongoPreferencePage"
-            id="com.cleverton.longmethoddetector.preferences.ValorMetodoLongoPreferencePage"
+            class="br.ufs.smelldetector.preferences.ValorMetodoLongoPreferencePage"
+            id="br.ufs.smelldetector.preferences.ValorMetodoLongoPreferencePage"
             name="ContextLongMethod">
       </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="com.cleverton.longmethoddetector.preferences.PreferenceInitializer">
+            class="br.ufs.smelldetector.preferences.PreferenceInitializer">
       </initializer>
    </extension>
    
@@ -55,9 +55,9 @@
 	 		objectClass="org.eclipse.jdt.core.IOpenable">
          	<action
                label="Enable ContextLongMethod Analysis"
-               class="com.cleverton.longmethoddetector.popup.AdicionarAnaliseProjeto"
+               class="br.ufs.smelldetector.popup.AdicionarAnaliseProjeto"
                menubarPath="additions"
-               id="com.cleverton.longmethoddetector.popupMenu.adicionarProjeto">
+               id="br.ufs.smelldetector.popupMenu.adicionarProjeto">
          	</action>
 		</objectContribution>
 	</extension>
@@ -66,15 +66,15 @@
 	 		objectClass="org.eclipse.jdt.core.IOpenable">
          	<action
                label="Disable ContextLongMethod Analysis"
-               class="com.cleverton.longmethoddetector.popup.RemoverAnaliseProjeto"
+               class="br.ufs.smelldetector.popup.RemoverAnaliseProjeto"
                menubarPath="additions"
-               id="com.cleverton.longmethoddetector.popupMenu.removerProjeto">
+               id="br.ufs.smelldetector.popupMenu.removerProjeto">
          	</action>
 		</objectContribution>
 	</extension>
 	<!-- MARCADOR PERSONALIZADO -->
 	<!-- Marcador -->
-	<extension id="com.cleverton.longmethoddetector.mymarker"
+	<extension id="br.ufs.smelldetector.mymarker"
     	point="org.eclipse.core.resources.markers">
     	<super type="org.eclipse.core.resources.textmarker"/>
     	<super type="org.eclipse.core.resources.marker" />
@@ -84,7 +84,7 @@
   	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification"
   		id="myannotationspecification">
      	<specification
-        	annotationType="com.cleverton.longmethoddetector.myannotation"
+        	annotationType="br.ufs.smelldetector.myannotation"
         	icon="icons/find.png"
         	overviewRulerPreferenceKey="markerOverview"
         	overviewRulerPreferenceValue="true"
@@ -109,17 +109,17 @@
      	<type
      		markerSeverity="0"
         	super="org.eclipse.ui.workbench.texteditor.info"
-        	name="com.cleverton.longmethoddetector.myannotation"
-        	markerType="com.cleverton.longmethoddetector.mymarker"/>
+        	name="br.ufs.smelldetector.myannotation"
+        	markerType="br.ufs.smelldetector.mymarker"/>
   	</extension>
   	<!--define the decorator -->
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
-		    id="com.cleverton.longmethoddetector.filedecorator"
+		    id="br.ufs.smelldetector.filedecorator"
 		    label="MyMarker Decorator"
 		    state="true"
 		    quadrant = "BOTTOM_RIGHT"
-		    class="com.cleverton.longmethoddetector.marker.FileDecorator"
+		    class="br.ufs.smelldetector.marker.FileDecorator"
 		    adaptable="true"
 			lightweight="true">
 			<enablement>

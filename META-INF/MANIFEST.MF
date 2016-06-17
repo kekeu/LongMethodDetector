@@ -3,14 +3,15 @@ Bundle-ManifestVersion: 2
 Bundle-Name: LongMethodDetector
 Bundle-SymbolicName: com.cleverton.longmethoddetector;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.cleverton.longmethoddetector.Activator
+Bundle-Activator: br.ufs.smelldetector.Activator
 Bundle-Vendor: CLEVERTON
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.jdt.core,
  org.eclipse.core.resources,
- org.eclipse.ui.editors
+ org.eclipse.ui.editors,
+ org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.jface.text,
